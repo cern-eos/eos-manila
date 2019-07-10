@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+message CreateShareRequest {
+   string name = 1;
+}
+
+message Response {
+   string msg = 1;
+   int32 response_code = 2;
+}
+
+service EOS {
+   rpc CreateShare(CreateShareRequest) returns (Response) {}
+}
+
