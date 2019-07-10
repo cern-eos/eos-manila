@@ -41,14 +41,13 @@ class EOSServicer(eos_pb2_grpc.EOSServicer):
     def DeleteShare(self, request, context):
         response = eos_pb2.Response()
 
-        del shares[request.id]
-
         if request.id in shares:
-           response.msg = "error"
-           response.response_code = -1
-        else:
+           del shares[request.id]
            response.msg = "success"
            response.response_code = 1
+        else:
+           response.msg = "error"
+           response.response_code = -1
 
         #print("Share (" + new_share["id"]  + ") removed with " +  response.msg + ". Code: " + str(response.response_code))
         eos.report(action='removed', id=request.id, response=response, shares=shares)

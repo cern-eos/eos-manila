@@ -68,7 +68,6 @@ class EOSDriver(driver.ShareDriver):
         pass
 
     def create_share(self, context, share, share_server=None):
-        LOG.debug(share) 
         request = eos_pb2.CreateShareRequest(name=share["name"], id=share["id"])
         self.grpc_client.CreateShare(request)
         
@@ -80,7 +79,8 @@ class EOSDriver(driver.ShareDriver):
         return ['/fake/path', '/fake/path2']
 
     def delete_share(self, context, share, share_server=None):
-        pass
+        request = eos_pb2.DeleteShareRequest(id=share["id"])
+        self.grpc_client.DeleteShare(request)
 
     def ensure_share(self, context, share, share_server=None):
         pass
