@@ -18,7 +18,7 @@ class EOSServicer(eos_pb2_grpc.EOSServicer):
     def CreateShare(self, request, context):
         response = eos_pb2.Response()
         
-        new_share = eos.create_share(request.name)
+        new_share = eos.create_share(request)
         #shares.append(new_share) 
         
         if new_share["id"] in shares: #don't want to overwrite any existing shares

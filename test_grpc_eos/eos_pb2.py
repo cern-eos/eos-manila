@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\teos.proto\"\"\n\x12\x43reateShareRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\" \n\x12\x44\x65leteShareRequest\x12\n\n\x02id\x18\x01 \x01(\t\".\n\x08Response\x12\x0b\n\x03msg\x18\x01 \x01(\t\x12\x15\n\rresponse_code\x18\x02 \x01(\x05\x32g\n\x03\x45OS\x12/\n\x0b\x43reateShare\x12\x13.CreateShareRequest\x1a\t.Response\"\x00\x12/\n\x0b\x44\x65leteShare\x12\x13.DeleteShareRequest\x1a\t.Response\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\teos.proto\".\n\x12\x43reateShareRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\n\n\x02id\x18\x02 \x01(\t\" \n\x12\x44\x65leteShareRequest\x12\n\n\x02id\x18\x01 \x01(\t\".\n\x08Response\x12\x0b\n\x03msg\x18\x01 \x01(\t\x12\x15\n\rresponse_code\x18\x02 \x01(\x05\x32g\n\x03\x45OS\x12/\n\x0b\x43reateShare\x12\x13.CreateShareRequest\x1a\t.Response\"\x00\x12/\n\x0b\x44\x65leteShare\x12\x13.DeleteShareRequest\x1a\t.Response\"\x00\x62\x06proto3')
 )
 
 
@@ -40,6 +40,13 @@ _CREATESHAREREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='id', full_name='CreateShareRequest.id', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -53,7 +60,7 @@ _CREATESHAREREQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=13,
-  serialized_end=47,
+  serialized_end=59,
 )
 
 
@@ -83,8 +90,8 @@ _DELETESHAREREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=49,
-  serialized_end=81,
+  serialized_start=61,
+  serialized_end=93,
 )
 
 
@@ -121,8 +128,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=83,
-  serialized_end=129,
+  serialized_start=95,
+  serialized_end=141,
 )
 
 DESCRIPTOR.message_types_by_name['CreateShareRequest'] = _CREATESHAREREQUEST
@@ -159,8 +166,8 @@ _EOS = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=131,
-  serialized_end=234,
+  serialized_start=143,
+  serialized_end=246,
   methods=[
   _descriptor.MethodDescriptor(
     name='CreateShare',

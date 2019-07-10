@@ -18,8 +18,8 @@ import six
 import json
 
 import grpc
-import test_eos_grpc.eos_pb2 as eos_pb2
-import test_eos_grpc.eos_pb2_grpc as eos_pb2_grpc
+import test_grpc_eos.eos_pb2 as eos_pb2
+import test_grpc_eos.eos_pb2_grpc as eos_pb2_grpc
 
 from manila.share import driver
 from manila.tests import fake_service_instance
@@ -68,11 +68,12 @@ class EOSDriver(driver.ShareDriver):
         pass
 
     def create_share(self, context, share, share_server=None):
-        
-        request = eos_pb2.CreateShareRequest(name='hellowrld')
+        LOG.debug(share) 
+        request = eos_pb2.CreateShareRequest(name=share["name"], id=share["id"])
         self.grpc_client.CreateShare(request)
         
-        return 1
+        #should return the location of where the share is located on the server
+        return 'http://127.0.0.1/eos_shares/' + share["id"]
 
     def create_share_from_snapshot(self, context, share, snapshot,
                                    share_server=None):

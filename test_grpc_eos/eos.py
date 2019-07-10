@@ -10,7 +10,7 @@ def report(action, id, response, shares):
 
 def create_share(request):
    share = {}
-   share["name"] = request
-   share["id"] = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(7))
+   share["name"] = request.name
+   share["id"] = request.id #''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(7))
 
    return share
