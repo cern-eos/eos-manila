@@ -19,6 +19,11 @@ class EOSStub(object):
         request_serializer=eos__pb2.CreateShareRequest.SerializeToString,
         response_deserializer=eos__pb2.Response.FromString,
         )
+    self.DeleteShare = channel.unary_unary(
+        '/EOS/DeleteShare',
+        request_serializer=eos__pb2.DeleteShareRequest.SerializeToString,
+        response_deserializer=eos__pb2.Response.FromString,
+        )
 
 
 class EOSServicer(object):
@@ -32,12 +37,24 @@ class EOSServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
+  def DeleteShare(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
 
 def add_EOSServicer_to_server(servicer, server):
   rpc_method_handlers = {
       'CreateShare': grpc.unary_unary_rpc_method_handler(
           servicer.CreateShare,
           request_deserializer=eos__pb2.CreateShareRequest.FromString,
+          response_serializer=eos__pb2.Response.SerializeToString,
+      ),
+      'DeleteShare': grpc.unary_unary_rpc_method_handler(
+          servicer.DeleteShare,
+          request_deserializer=eos__pb2.DeleteShareRequest.FromString,
           response_serializer=eos__pb2.Response.SerializeToString,
       ),
   }

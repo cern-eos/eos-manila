@@ -4,6 +4,10 @@ message CreateShareRequest {
    string name = 1;
 }
 
+message DeleteShareRequest {
+   string id = 1;
+}
+
 message Response {
    string msg = 1;
    int32 response_code = 2;
@@ -11,5 +15,6 @@ message Response {
 
 service EOS {
    rpc CreateShare(CreateShareRequest) returns (Response) {}
+   rpc DeleteShare(DeleteShareRequest) returns (Response) {}
 }
 
