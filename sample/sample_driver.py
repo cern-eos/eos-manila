@@ -15,33 +15,28 @@
 
 from oslo_log import log
 import six
-import os
 import json
 
 import grpc
-import grpc_eos.eos_pb2 as eos_pb2
-import grpc_eos.eos_pb2_grpc as eos_pb2_grpc
+import test_grpc_eos.eos_pb2 as eos_pb2
+import test_grpc_eos.eos_pb2_grpc as eos_pb2_grpc
 
 from manila.share import driver
 from manila.tests import fake_service_instance
 
 LOG = log.getLogger(__name__)
 
-class RequestSwitcher(object):
-
-    def gen_request(self, request_type, share=None, context=None):
-        method_name = request_type
-        method = getattr(self, method_name, "Request type does not exist.")
-        
-        self.share = share
-        self.context = context
-
-        return method()
-
-    #def create_share(self):
-        
 
 class EOSDriver(driver.ShareDriver):
+    """Fake EOS share driver.
+
+    This fake EOS driver was meant to provide a means of learning how to interface with Manila
+    The true driver is in driver.py which should be located in the same folder.
+
+    This driver will allow a user to "create" and "delete" shares using the test server in the 
+    "test_grpc_eos" folder. Use the Manila CLI or interface to play around with these actions.
+
+    """
 
     def __init__(self, *args, **kwargs):
         #self._setup_service_instance_manager()
@@ -58,37 +53,31 @@ class EOSDriver(driver.ShareDriver):
         return {'size': 1}
     '''
 
-    def request(self, request_type, share=None, context=None):
-        pass
-
     def unmanage(self, share, share_server=None):
         LOG.debug("Fake share driver: unmanage")
 
+    def create_snapshot(self, context, snapshot, share_server=None):
+        pass
+
+    def delete_snapshot(self, context, snapshot, share_server=None):
+        pass
+
     def create_share(self, context, share, share_server=None):
-        #LOG.debug(context.to_dict())
-        user = context.to_dict()["user_id"] 
-        request = eos_pb2.CreateShareRequest(creator=user, name=share["name"], id=share["id"], size=share["size"])
-        response = self.grpc_client.CreateShare(request)
+        request = eos_pb2.CreateShareRequest(name=share["name"], id=share["id"])
+        self.grpc_client.CreateShare(request)
+        LOG.debug(context)
+        LOG.debug(share)
         
-        #LOG.debug(context)
-        #LOG.debug(share)
-        
-        if response.response_code < 0:
-           return None
         #should return the location of where the share is located on the server
-        return '~/eos_shares/' + user  + "/" + share["id"]
+        return 'http://127.0.0.1/eos_shares/' + share["id"]
 
     def create_share_from_snapshot(self, context, share, snapshot,
                                    share_server=None):
         return ['/fake/path', '/fake/path2']
 
     def delete_share(self, context, share, share_server=None):
-        user = context.to_dict()["user_id"]
-        request = eos_pb2.DeleteShareRequest(id=share["id"], creator=user)
-        response = self.grpc_client.DeleteShare(request)
-
-        if response.response_code < 0:
-           return False
+        request = eos_pb2.DeleteShareRequest(id=share["id"])
+        self.grpc_client.DeleteShare(request)
 
     def ensure_share(self, context, share, share_server=None):
         pass
@@ -113,20 +102,14 @@ class EOSDriver(driver.ShareDriver):
 
     def delete_share_group(self, context, group_id, share_server=None):
         pass
-    
-    def get_capacities(self):
-        pass 
-        
-    def _update_share_stats(self):
-        #total, free = self.get_capacities()
 
+    def _update_share_stats(self):
         data = dict(
             storage_protocol='NFS',
-            vendor_name='CERN',
+            vendor_name='EOS/CERN',
             share_backend_name='EOS',
             driver_version='1.0',
             total_capacity_gb=500,
             free_capacity_gb=100,
             reserved_percentage=5)
-
         super(EOSDriver, self)._update_share_stats(data)
