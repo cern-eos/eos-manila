@@ -47,10 +47,15 @@ class EOSDriver(driver.ShareDriver):
         super(EOSDriver, self).__init__(False, *args, **kwargs)
         
         self.backend_name = self.configuration.safe_get('share_backend_name') or 'EOS'
+        
         channel = grpc.insecure_channel('localhost:50051')
         self.grpc_client = eos_pb2_grpc.EOSStub(channel)
+        
         self.total_capacity = 50 
-        self.free_capacity = 10
+
+        # if the eos_shares path does not exist, create it so that get_capacities does not fail
+        if not os.path.isdir(os.path.expanduser('~') + "/eos_shares/"):
+           os.mkdir(os.path.expanduser('~') + "/eos_shares")
 
     '''
     def manage_existing(self, share, driver_options, share_server=None):
