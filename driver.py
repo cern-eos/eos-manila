@@ -44,12 +44,14 @@ class RequestSwitcher(object):
 class EOSDriver(driver.ShareDriver):
 
     def __init__(self, *args, **kwargs):
-        #self._setup_service_instance_manager()
         super(EOSDriver, self).__init__(False, *args, **kwargs)
+        
         self.backend_name = self.configuration.safe_get('share_backend_name') or 'EOS'
         channel = grpc.insecure_channel('localhost:50051')
         self.grpc_client = eos_pb2_grpc.EOSStub(channel)
-    
+        self.total_capacity = 50 
+        self.free_capacity = 10
+
     '''
     def manage_existing(self, share, driver_options, share_server=None):
         LOG.debug("Fake share driver: manage")
@@ -115,18 +117,51 @@ class EOSDriver(driver.ShareDriver):
         pass
     
     def get_capacities(self):
-        pass 
+        '''
+        path = os.path.expanduser('~') + "/eos_shares"
+        used = 0
+
+        for filename in os.listdir(path):
+
+            if filename.endswith(".txt"):
+                f = open(filename)
+                used = used + float(f.read())
+                #LOG.debug(lines)
+                continue
+            else:
+                continue
+        '''
+
+        path = os.path.expanduser('~') + "/eos_shares"
+        used = 0
+        #print(os.listdir(path))
+
+        for root, directories, files in os.walk(path):
+
+            for file in files:
+
+                if file.endswith(".txt"):
+                    f = open(os.path.join(root, file))
+                    used = used + int(f.read())
+
+                    continue
+                else:
+                    continue
+
+        return used
         
     def _update_share_stats(self):
-        #total, free = self.get_capacities()
+        used = self.get_capacities()
+        
+        free = self.total_capacity - used
 
         data = dict(
             storage_protocol='NFS',
             vendor_name='CERN',
             share_backend_name='EOS',
             driver_version='1.0',
-            total_capacity_gb=500,
-            free_capacity_gb=100,
+            total_capacity_gb=self.total_capacity,
+            free_capacity_gb= free,
             reserved_percentage=5)
 
         super(EOSDriver, self)._update_share_stats(data)

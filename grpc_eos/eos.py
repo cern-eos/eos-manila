@@ -7,8 +7,6 @@ def report(action, response):
    print("Share " + action  + "  with " +  response.msg + ". Code: " + str(response.response_code))
    #print("\n~ Available Shares [TOTAL: " + str(len(shares)) + " Shares] ~")
    #print(shares)
-   print("\n")
-
 
 def create_share(request):
    #share = {}
@@ -26,6 +24,11 @@ def create_share(request):
    #os.mkdir(path, 0755)
    os.makedirs(path)
 
+   #want some way to record how large the share is -- storing a file with no. of GB
+   file = open(path + "/size.txt", "w+")
+   file.write(str(request.size))
+   file.close()
+   
    return path
 
 def delete_share(request):
