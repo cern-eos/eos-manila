@@ -49,6 +49,15 @@ class EOSServicer(eos_pb2_grpc.EOSServicer):
 
         return response
 
+    def ExtendShare(self, request, context):
+        response = eos_pb2.Response()
+        eos.change_share_size(request)
+        return response        
+
+    def ShrinkShare(self, request, context):
+        response = eos_pb2.Response()
+        eos.change_share_size(request)
+        return response
 
 # create a gRPC server
 server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

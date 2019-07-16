@@ -1,5 +1,9 @@
 syntax = "proto3";
 
+message BaseRequest {
+   string name = 1;
+}
+
 message CreateShareRequest {
    string creator = 1;
    string name = 2;
@@ -12,6 +16,20 @@ message DeleteShareRequest {
    string creator = 2;
 }
 
+message ExtendShareRequest {
+   string creator = 1;
+   string id = 2;
+   int32 new_size = 3;
+}
+
+message ShrinkShareRequest {
+   string creator = 1;
+   string id = 2;
+   int32 new_size = 3;
+}
+
+message GetCapacityRequest {}
+
 message Response {
    string msg = 1;
    int32 response_code = 2;
@@ -20,5 +38,8 @@ message Response {
 service EOS {
    rpc CreateShare(CreateShareRequest) returns (Response) {}
    rpc DeleteShare(DeleteShareRequest) returns (Response) {}
+   rpc ExtendShare(ExtendShareRequest) returns (Response) {}
+   rpc ShrinkShare(ShrinkShareRequest) returns (Response) {}
+   rpc GetCapacity(GetCapacityRequest) returns (Response) {}
 }
 

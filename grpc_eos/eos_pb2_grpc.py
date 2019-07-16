@@ -24,6 +24,21 @@ class EOSStub(object):
         request_serializer=eos__pb2.DeleteShareRequest.SerializeToString,
         response_deserializer=eos__pb2.Response.FromString,
         )
+    self.ExtendShare = channel.unary_unary(
+        '/EOS/ExtendShare',
+        request_serializer=eos__pb2.ExtendShareRequest.SerializeToString,
+        response_deserializer=eos__pb2.Response.FromString,
+        )
+    self.ShrinkShare = channel.unary_unary(
+        '/EOS/ShrinkShare',
+        request_serializer=eos__pb2.ShrinkShareRequest.SerializeToString,
+        response_deserializer=eos__pb2.Response.FromString,
+        )
+    self.GetCapacity = channel.unary_unary(
+        '/EOS/GetCapacity',
+        request_serializer=eos__pb2.GetCapacityRequest.SerializeToString,
+        response_deserializer=eos__pb2.Response.FromString,
+        )
 
 
 class EOSServicer(object):
@@ -44,6 +59,27 @@ class EOSServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
+  def ExtendShare(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def ShrinkShare(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def GetCapacity(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
 
 def add_EOSServicer_to_server(servicer, server):
   rpc_method_handlers = {
@@ -55,6 +91,21 @@ def add_EOSServicer_to_server(servicer, server):
       'DeleteShare': grpc.unary_unary_rpc_method_handler(
           servicer.DeleteShare,
           request_deserializer=eos__pb2.DeleteShareRequest.FromString,
+          response_serializer=eos__pb2.Response.SerializeToString,
+      ),
+      'ExtendShare': grpc.unary_unary_rpc_method_handler(
+          servicer.ExtendShare,
+          request_deserializer=eos__pb2.ExtendShareRequest.FromString,
+          response_serializer=eos__pb2.Response.SerializeToString,
+      ),
+      'ShrinkShare': grpc.unary_unary_rpc_method_handler(
+          servicer.ShrinkShare,
+          request_deserializer=eos__pb2.ShrinkShareRequest.FromString,
+          response_serializer=eos__pb2.Response.SerializeToString,
+      ),
+      'GetCapacity': grpc.unary_unary_rpc_method_handler(
+          servicer.GetCapacity,
+          request_deserializer=eos__pb2.GetCapacityRequest.FromString,
           response_serializer=eos__pb2.Response.SerializeToString,
       ),
   }

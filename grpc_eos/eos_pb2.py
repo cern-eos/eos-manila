@@ -20,10 +20,41 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\teos.proto\"M\n\x12\x43reateShareRequest\x12\x0f\n\x07\x63reator\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\n\n\x02id\x18\x03 \x01(\t\x12\x0c\n\x04size\x18\x04 \x01(\x05\"1\n\x12\x44\x65leteShareRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0f\n\x07\x63reator\x18\x02 \x01(\t\".\n\x08Response\x12\x0b\n\x03msg\x18\x01 \x01(\t\x12\x15\n\rresponse_code\x18\x02 \x01(\x05\x32g\n\x03\x45OS\x12/\n\x0b\x43reateShare\x12\x13.CreateShareRequest\x1a\t.Response\"\x00\x12/\n\x0b\x44\x65leteShare\x12\x13.DeleteShareRequest\x1a\t.Response\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\teos.proto\"\x1b\n\x0b\x42\x61seRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"M\n\x12\x43reateShareRequest\x12\x0f\n\x07\x63reator\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\n\n\x02id\x18\x03 \x01(\t\x12\x0c\n\x04size\x18\x04 \x01(\x05\"1\n\x12\x44\x65leteShareRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0f\n\x07\x63reator\x18\x02 \x01(\t\"C\n\x12\x45xtendShareRequest\x12\x0f\n\x07\x63reator\x18\x01 \x01(\t\x12\n\n\x02id\x18\x02 \x01(\t\x12\x10\n\x08new_size\x18\x03 \x01(\x05\"C\n\x12ShrinkShareRequest\x12\x0f\n\x07\x63reator\x18\x01 \x01(\t\x12\n\n\x02id\x18\x02 \x01(\t\x12\x10\n\x08new_size\x18\x03 \x01(\x05\"\x14\n\x12GetCapacityRequest\".\n\x08Response\x12\x0b\n\x03msg\x18\x01 \x01(\t\x12\x15\n\rresponse_code\x18\x02 \x01(\x05\x32\xfa\x01\n\x03\x45OS\x12/\n\x0b\x43reateShare\x12\x13.CreateShareRequest\x1a\t.Response\"\x00\x12/\n\x0b\x44\x65leteShare\x12\x13.DeleteShareRequest\x1a\t.Response\"\x00\x12/\n\x0b\x45xtendShare\x12\x13.ExtendShareRequest\x1a\t.Response\"\x00\x12/\n\x0bShrinkShare\x12\x13.ShrinkShareRequest\x1a\t.Response\"\x00\x12/\n\x0bGetCapacity\x12\x13.GetCapacityRequest\x1a\t.Response\"\x00\x62\x06proto3')
 )
 
 
+
+
+_BASEREQUEST = _descriptor.Descriptor(
+  name='BaseRequest',
+  full_name='BaseRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='name', full_name='BaseRequest.name', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=13,
+  serialized_end=40,
+)
 
 
 _CREATESHAREREQUEST = _descriptor.Descriptor(
@@ -73,8 +104,8 @@ _CREATESHAREREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=13,
-  serialized_end=90,
+  serialized_start=42,
+  serialized_end=119,
 )
 
 
@@ -111,8 +142,122 @@ _DELETESHAREREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=92,
-  serialized_end=141,
+  serialized_start=121,
+  serialized_end=170,
+)
+
+
+_EXTENDSHAREREQUEST = _descriptor.Descriptor(
+  name='ExtendShareRequest',
+  full_name='ExtendShareRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='creator', full_name='ExtendShareRequest.creator', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='id', full_name='ExtendShareRequest.id', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='new_size', full_name='ExtendShareRequest.new_size', index=2,
+      number=3, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=172,
+  serialized_end=239,
+)
+
+
+_SHRINKSHAREREQUEST = _descriptor.Descriptor(
+  name='ShrinkShareRequest',
+  full_name='ShrinkShareRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='creator', full_name='ShrinkShareRequest.creator', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='id', full_name='ShrinkShareRequest.id', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='new_size', full_name='ShrinkShareRequest.new_size', index=2,
+      number=3, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=241,
+  serialized_end=308,
+)
+
+
+_GETCAPACITYREQUEST = _descriptor.Descriptor(
+  name='GetCapacityRequest',
+  full_name='GetCapacityRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=310,
+  serialized_end=330,
 )
 
 
@@ -149,14 +294,25 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=143,
-  serialized_end=189,
+  serialized_start=332,
+  serialized_end=378,
 )
 
+DESCRIPTOR.message_types_by_name['BaseRequest'] = _BASEREQUEST
 DESCRIPTOR.message_types_by_name['CreateShareRequest'] = _CREATESHAREREQUEST
 DESCRIPTOR.message_types_by_name['DeleteShareRequest'] = _DELETESHAREREQUEST
+DESCRIPTOR.message_types_by_name['ExtendShareRequest'] = _EXTENDSHAREREQUEST
+DESCRIPTOR.message_types_by_name['ShrinkShareRequest'] = _SHRINKSHAREREQUEST
+DESCRIPTOR.message_types_by_name['GetCapacityRequest'] = _GETCAPACITYREQUEST
 DESCRIPTOR.message_types_by_name['Response'] = _RESPONSE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
+
+BaseRequest = _reflection.GeneratedProtocolMessageType('BaseRequest', (_message.Message,), {
+  'DESCRIPTOR' : _BASEREQUEST,
+  '__module__' : 'eos_pb2'
+  # @@protoc_insertion_point(class_scope:BaseRequest)
+  })
+_sym_db.RegisterMessage(BaseRequest)
 
 CreateShareRequest = _reflection.GeneratedProtocolMessageType('CreateShareRequest', (_message.Message,), {
   'DESCRIPTOR' : _CREATESHAREREQUEST,
@@ -171,6 +327,27 @@ DeleteShareRequest = _reflection.GeneratedProtocolMessageType('DeleteShareReques
   # @@protoc_insertion_point(class_scope:DeleteShareRequest)
   })
 _sym_db.RegisterMessage(DeleteShareRequest)
+
+ExtendShareRequest = _reflection.GeneratedProtocolMessageType('ExtendShareRequest', (_message.Message,), {
+  'DESCRIPTOR' : _EXTENDSHAREREQUEST,
+  '__module__' : 'eos_pb2'
+  # @@protoc_insertion_point(class_scope:ExtendShareRequest)
+  })
+_sym_db.RegisterMessage(ExtendShareRequest)
+
+ShrinkShareRequest = _reflection.GeneratedProtocolMessageType('ShrinkShareRequest', (_message.Message,), {
+  'DESCRIPTOR' : _SHRINKSHAREREQUEST,
+  '__module__' : 'eos_pb2'
+  # @@protoc_insertion_point(class_scope:ShrinkShareRequest)
+  })
+_sym_db.RegisterMessage(ShrinkShareRequest)
+
+GetCapacityRequest = _reflection.GeneratedProtocolMessageType('GetCapacityRequest', (_message.Message,), {
+  'DESCRIPTOR' : _GETCAPACITYREQUEST,
+  '__module__' : 'eos_pb2'
+  # @@protoc_insertion_point(class_scope:GetCapacityRequest)
+  })
+_sym_db.RegisterMessage(GetCapacityRequest)
 
 Response = _reflection.GeneratedProtocolMessageType('Response', (_message.Message,), {
   'DESCRIPTOR' : _RESPONSE,
@@ -187,8 +364,8 @@ _EOS = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=191,
-  serialized_end=294,
+  serialized_start=381,
+  serialized_end=631,
   methods=[
   _descriptor.MethodDescriptor(
     name='CreateShare',
@@ -205,6 +382,33 @@ _EOS = _descriptor.ServiceDescriptor(
     index=1,
     containing_service=None,
     input_type=_DELETESHAREREQUEST,
+    output_type=_RESPONSE,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='ExtendShare',
+    full_name='EOS.ExtendShare',
+    index=2,
+    containing_service=None,
+    input_type=_EXTENDSHAREREQUEST,
+    output_type=_RESPONSE,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='ShrinkShare',
+    full_name='EOS.ShrinkShare',
+    index=3,
+    containing_service=None,
+    input_type=_SHRINKSHAREREQUEST,
+    output_type=_RESPONSE,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='GetCapacity',
+    full_name='EOS.GetCapacity',
+    index=4,
+    containing_service=None,
+    input_type=_GETCAPACITYREQUEST,
     output_type=_RESPONSE,
     serialized_options=None,
   ),

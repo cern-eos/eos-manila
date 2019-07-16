@@ -97,6 +97,14 @@ class EOSDriver(driver.ShareDriver):
         if response.response_code < 0:
            return False
 
+    def extend_share(self, share, new_size, share_server=None):
+        request = eos_pb2.ExtendShareRequest(creator=share["user_id"], id=share["id"], new_size=new_size)
+        response = self.grpc_client.ExtendShare(request)
+
+    def shrink_share(self, share, new_size, share_server=None):
+        request = eos_pb2.ShrinkShareRequest(creator=share["user_id"], id=share["id"], new_size=new_size)
+        response = self.grpc_client.ShrinkShare(request)
+
     def ensure_share(self, context, share, share_server=None):
         pass
 

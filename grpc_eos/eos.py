@@ -33,4 +33,13 @@ def create_share(request):
 
 def delete_share(request):
    return shutil.rmtree(os.path.expanduser('~') + "/eos_shares/" + request.creator + "/" + request.id, ignore_errors=True)
+
+def change_share_size(request):
+   
+   file = open(os.path.expanduser('~') + "/eos_shares/" + request.creator + "/" + request.id + "/size.txt", 'w')
+   file.write(str(request.new_size))
+   file.close()
+
+
+#def shrink_share(request):
    
