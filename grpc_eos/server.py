@@ -17,7 +17,7 @@ class EOSServicer(eos_pb2_grpc.EOSServicer):
     ''' HELPER FUNCTIONS '''
 
     def validate_auth(self, key=None):
-        return True
+        return key == "BakTIcB08XwQ7vNvagi8"
 
     def generate_response(self, message=None, code=None):
         response = eos_pb2.Response()
@@ -83,7 +83,7 @@ class EOSServicer(eos_pb2_grpc.EOSServicer):
             return func(self, request=request, context=context)
         else:
            #invalid request -- reject
-           return generate_response(message="Bad Request: Permission Denied", code=-1)
+           return self.generate_response(message="Bad Request: Permission Denied", code=-1)
 
 # create a gRPC server
 server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

@@ -29,18 +29,13 @@ from manila.tests import fake_service_instance
 LOG = log.getLogger(__name__)
 
 eos_opts = [
-    cfg.HostAddressOpt('hitachi_hsp_host',
-                       required=True,
-                       help="HSP management host for communication between "
-                            "Manila controller and HSP."),
-    cfg.StrOpt('hitachi_hsp_username',
+    cfg.StrOpt('eos_authentication_key',
                required=True,
-               help="HSP username to perform tasks such as create filesystems"
-                    " and shares."),
-    cfg.StrOpt('hitachi_hsp_password',
+               help="Authentication key to access EOS GRPC server."),
+    cfg.StrOpt('eos_username',
                required=True,
                secret=True,
-               help="HSP password for the username provided."),
+               help="EOS username"),
 ]
 
 CONF = cfg.CONF
@@ -58,7 +53,7 @@ class EOSDriver(driver.ShareDriver):
         self.grpc_client = eos_pb2_grpc.EOSStub(channel) 
 
     def request(self, request_type, share=None, context=None):         
-        auth_key = "dsfdf"
+        auth_key = self.configuration.eos_authentication_key
         protocol = "EOS"
 
         if not share:
