@@ -74,24 +74,12 @@ class EOSDriver(driver.ShareDriver):
         LOG.debug("Fake share driver: unmanage")
 
     def create_share(self, context, share, share_server=None):
-        #LOG.debug(context.to_dict())
-        #user = context.to_dict()["user_id"] 
-        #request = eos_pb2.CreateShareRequest(creator=user, name=share["name"], id=share["id"], size=share["size"])
-        #response = self.grpc_client.CreateShare(request)
-        #LOG.debug(context)
-        #LOG.debug(share)
-        
-        #if response.response_code < 0:
-        #   return None
-        #should return the location of where the share is located on the server
-        #return '~/eos_shares/' + user  + "/" + share["id"]
-
         response = self.request(request_type="create_share", share=share, context=context)
         if response.code < 0:
            return None
 
         #should return the location of where the share is located on the server
-        return '~/eos_shares/' + share["user_id"] + "/" + share["id"]
+        return '~/eos_shares/' + share["user_id"] + "/" + share["display_name"]
 
     def create_share_from_snapshot(self, context, share, snapshot,
                                    share_server=None):
