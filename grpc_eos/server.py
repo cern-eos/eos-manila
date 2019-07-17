@@ -9,55 +9,66 @@ import eos_pb2_grpc
 
 import eos
 
-shares = {}
+EOS_PROTOCOL = "EOS"
 
 # create a class to define the server functions
 class EOSServicer(eos_pb2_grpc.EOSServicer):
+   
+    def validate_auth(self, key=None):
+        return True
 
-    def CreateShare(self, request, context):
+    def generate_response(self, message=None, code=None):
         response = eos_pb2.Response()
-        
+        response.msg = message
+        response.code = code
+        return response
+
+    def CreateShare(self, request, context):       
         share_location = eos.create_share(request)
         
         if not os.path.isdir(share_location):
-           response.msg = "error"
-           response.response_code = -1
+           response = self.generate_response(message="Could not create share", code=-1)
         else:
-           response.msg = "success"
-           response.response_code = 1
+           response = self.generate_response(message="Share successfully created", code=1)
         
         eos.report(action='added', response=response)
-
         return response
 
     def DeleteShare(self, request, context):
-        response = eos_pb2.Response()
-
-        success = eos.delete_share(request)
-
-        #if success:
+        old_share_location = eos.delete_share(request)
         
-        response.msg = "success"
-        response.response_code = 1
-        
-        #else:
-        #response.msg = "error"
-        #response.response_code = -1
+        if os.path.isdir(old_share_location):
+           response = self.generate_response(message="Could not delete share", code=-1)
+        else:
+           response = self.generate_response(message="Share successfully deleted", code=1)
 
-        
-        eos.report(action='removed', response=response)
-
+        eos.report(action='deleted', response=response)
         return response
 
     def ExtendShare(self, request, context):
-        response = eos_pb2.Response()
         eos.change_share_size(request)
-        return response        
+        return self.generate_response()
 
     def ShrinkShare(self, request, context):
-        response = eos_pb2.Response()
         eos.change_share_size(request)
-        return response
+        return self.generate_response()
+
+    switcher = {
+        "create_share": CreateShare,
+        "delete_share": DeleteShare,
+        "extend_share": ExtendShare,
+        "shrink_share": ShrinkShare
+    }
+
+    def ServerRequest(self, request, context):
+        #check the auth key & check the protocol type
+        if request.protocol == EOS_PROTOCOL and self.validate_auth(key=request.auth_key):
+            #route the request to the correct method/function
+            func = self.switcher.get(request.request_type, lambda: "Function does not exist.")
+            return func(self, request=request, context=context)
+        else:
+           #invalid request -- reject
+           return generate_response(message="Bad Request: Permission Denied", code=-1)
 
 # create a gRPC server
 server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

@@ -1,7 +1,17 @@
 syntax = "proto3";
 
-message BaseRequest {
-   string name = 1;
+message Request {
+   string request_type = 1;
+   string auth_key = 2;
+   string protocol = 3;
+   string share_name = 4;
+   string description = 5;
+   string share_id = 6;
+   string share_group_id = 7;
+   int32 quota = 8;
+   string creator = 9;
+   string egroup = 10;
+   string admin_egroup = 11;
 }
 
 message CreateShareRequest {
@@ -32,10 +42,11 @@ message GetCapacityRequest {}
 
 message Response {
    string msg = 1;
-   int32 response_code = 2;
+   int32 code = 2;
 }
 
 service EOS {
+   rpc ServerRequest(Request) returns (Response) {}
    rpc CreateShare(CreateShareRequest) returns (Response) {}
    rpc DeleteShare(DeleteShareRequest) returns (Response) {}
    rpc ExtendShare(ExtendShareRequest) returns (Response) {}

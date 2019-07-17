@@ -14,6 +14,11 @@ class EOSStub(object):
     Args:
       channel: A grpc.Channel.
     """
+    self.ServerRequest = channel.unary_unary(
+        '/EOS/ServerRequest',
+        request_serializer=eos__pb2.Request.SerializeToString,
+        response_deserializer=eos__pb2.Response.FromString,
+        )
     self.CreateShare = channel.unary_unary(
         '/EOS/CreateShare',
         request_serializer=eos__pb2.CreateShareRequest.SerializeToString,
@@ -44,6 +49,13 @@ class EOSStub(object):
 class EOSServicer(object):
   # missing associated documentation comment in .proto file
   pass
+
+  def ServerRequest(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
 
   def CreateShare(self, request, context):
     # missing associated documentation comment in .proto file
@@ -83,6 +95,11 @@ class EOSServicer(object):
 
 def add_EOSServicer_to_server(servicer, server):
   rpc_method_handlers = {
+      'ServerRequest': grpc.unary_unary_rpc_method_handler(
+          servicer.ServerRequest,
+          request_deserializer=eos__pb2.Request.FromString,
+          response_serializer=eos__pb2.Response.SerializeToString,
+      ),
       'CreateShare': grpc.unary_unary_rpc_method_handler(
           servicer.CreateShare,
           request_deserializer=eos__pb2.CreateShareRequest.FromString,

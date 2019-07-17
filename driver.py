@@ -13,6 +13,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+from oslo_config import cfg
 from oslo_log import log
 import six
 import os
@@ -27,19 +28,23 @@ from manila.tests import fake_service_instance
 
 LOG = log.getLogger(__name__)
 
-class RequestSwitcher(object):
+eos_opts = [
+    cfg.HostAddressOpt('hitachi_hsp_host',
+                       required=True,
+                       help="HSP management host for communication between "
+                            "Manila controller and HSP."),
+    cfg.StrOpt('hitachi_hsp_username',
+               required=True,
+               help="HSP username to perform tasks such as create filesystems"
+                    " and shares."),
+    cfg.StrOpt('hitachi_hsp_password',
+               required=True,
+               secret=True,
+               help="HSP password for the username provided."),
+]
 
-    def gen_request(self, request_type, share=None, context=None):
-        method_name = request_type
-        method = getattr(self, method_name, "Request type does not exist.")
-        
-        self.share = share
-        self.context = context
-
-        return method()
-
-    #def create_share(self):
-        
+CONF = cfg.CONF
+CONF.register_opts(eos_opts)   
 
 class EOSDriver(driver.ShareDriver):
 
@@ -47,7 +52,8 @@ class EOSDriver(driver.ShareDriver):
         super(EOSDriver, self).__init__(False, *args, **kwargs)
         
         self.backend_name = self.configuration.safe_get('share_backend_name') or 'EOS'
-        
+        self.configuration.append_config_values(eos_opts)
+
         channel = grpc.insecure_channel('localhost:50051')
         self.grpc_client = eos_pb2_grpc.EOSStub(channel)
         
@@ -57,33 +63,35 @@ class EOSDriver(driver.ShareDriver):
         if not os.path.isdir(os.path.expanduser('~') + "/eos_shares/"):
            os.mkdir(os.path.expanduser('~') + "/eos_shares")
 
-    '''
-    def manage_existing(self, share, driver_options, share_server=None):
-        LOG.debug("Fake share driver: manage")
-        LOG.debug("Fake share driver: driver options: %s",
-                  six.text_type(driver_options))
-        return {'size': 1}
-    '''
-
     def request(self, request_type, share=None, context=None):
-        pass
+        
+        request_proto = eos_pb2.Request(request_type=request_type, auth_key="dsfdf", protocol="EOS", share_name=share["display_name"], description=share["display_description"], share_id=share["id"], share_group_id=share["share_group_id"], quota=share["size"], creator=share["user_id"], egroup=share["project_id"], admin_egroup="")
+ 
+        response = self.grpc_client.ServerRequest(request_proto)
+        return response
 
     def unmanage(self, share, share_server=None):
         LOG.debug("Fake share driver: unmanage")
 
     def create_share(self, context, share, share_server=None):
         #LOG.debug(context.to_dict())
-        user = context.to_dict()["user_id"] 
-        request = eos_pb2.CreateShareRequest(creator=user, name=share["name"], id=share["id"], size=share["size"])
-        response = self.grpc_client.CreateShare(request)
-        
+        #user = context.to_dict()["user_id"] 
+        #request = eos_pb2.CreateShareRequest(creator=user, name=share["name"], id=share["id"], size=share["size"])
+        #response = self.grpc_client.CreateShare(request)
         #LOG.debug(context)
         #LOG.debug(share)
         
-        if response.response_code < 0:
-           return None
+        #if response.response_code < 0:
+        #   return None
         #should return the location of where the share is located on the server
-        return '~/eos_shares/' + user  + "/" + share["id"]
+        #return '~/eos_shares/' + user  + "/" + share["id"]
+
+        response = self.request(request_type="create_share", share=share, context=context)
+        if response.code < 0:
+           return None
+
+        #should return the location of where the share is located on the server
+        return '~/eos_shares/' + share["user_id"] + "/" + share["id"]
 
     def create_share_from_snapshot(self, context, share, snapshot,
                                    share_server=None):
@@ -91,11 +99,11 @@ class EOSDriver(driver.ShareDriver):
 
     def delete_share(self, context, share, share_server=None):
         user = context.to_dict()["user_id"]
-        request = eos_pb2.DeleteShareRequest(id=share["id"], creator=user)
-        response = self.grpc_client.DeleteShare(request)
+        #request = eos_pb2.DeleteShareRequest(id=share["id"], creator=user)
+        #response = self.grpc_client.DeleteShare(request)
 
-        if response.response_code < 0:
-           return False
+        response = self.request(request_type="delete_share", share=share, context=context)
+
 
     def extend_share(self, share, new_size, share_server=None):
         request = eos_pb2.ExtendShareRequest(creator=share["user_id"], id=share["id"], new_size=new_size)
@@ -155,9 +163,12 @@ class EOSDriver(driver.ShareDriver):
 
                 if file.endswith(".txt"):
                     f = open(os.path.join(root, file))
-                    used = used + int(f.read())
-
-                    continue
+                    
+                    try:
+                        used = used + int(f.read())
+                        continue
+                    except ValueError:
+                        continue
                 else:
                     continue
 
