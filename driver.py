@@ -50,24 +50,24 @@ class EOSDriver(driver.ShareDriver):
 
     def __init__(self, *args, **kwargs):
         super(EOSDriver, self).__init__(False, *args, **kwargs)
-        
+ 
         self.backend_name = self.configuration.safe_get('share_backend_name') or 'EOS'
         self.configuration.append_config_values(eos_opts)
 
         channel = grpc.insecure_channel('localhost:50051')
-        self.grpc_client = eos_pb2_grpc.EOSStub(channel)
-        
-        self.total_capacity = 50 
+        self.grpc_client = eos_pb2_grpc.EOSStub(channel) 
 
-        # if the eos_shares path does not exist, create it so that get_capacities does not fail
-        if not os.path.isdir(os.path.expanduser('~') + "/eos_shares/"):
-           os.mkdir(os.path.expanduser('~') + "/eos_shares")
+    def request(self, request_type, share=None, context=None):         
+        auth_key = "dsfdf"
+        protocol = "EOS"
 
-    def request(self, request_type, share=None, context=None):
+        if not share:
+            request_proto = eos_pb2.Request(request_type=request_type, auth_key=auth_key, protocol=protocol)
+        else:
+            request_proto = eos_pb2.Request(request_type=request_type, auth_key=auth_key, protocol=protocol, share_name=share["display_name"], description=share["display_description"], share_id=share["id"], share_group_id=share["share_group_id"], quota=share["size"], creator=share["user_id"], egroup=share["project_id"], admin_egroup="")
         
-        request_proto = eos_pb2.Request(request_type=request_type, auth_key="dsfdf", protocol="EOS", share_name=share["display_name"], description=share["display_description"], share_id=share["id"], share_group_id=share["share_group_id"], quota=share["size"], creator=share["user_id"], egroup=share["project_id"], admin_egroup="")
- 
         response = self.grpc_client.ServerRequest(request_proto)
+
         return response
 
     def unmanage(self, share, share_server=None):
@@ -79,7 +79,7 @@ class EOSDriver(driver.ShareDriver):
            return None
 
         #should return the location of where the share is located on the server
-        return '~/eos_shares/' + share["user_id"] + "/" + share["display_name"]
+        return response.msg #'~/eos_shares/' + share["user_id"] + "/" + share["display_name"]
 
     def create_share_from_snapshot(self, context, share, snapshot,
                                    share_server=None):
@@ -126,53 +126,28 @@ class EOSDriver(driver.ShareDriver):
         pass
     
     def get_capacities(self):
-        '''
-        path = os.path.expanduser('~') + "/eos_shares"
-        used = 0
+        try:
+            response = self.request(request_type="get_used_capacity")
+            used = int(response.msg)
 
-        for filename in os.listdir(path):
+            response = self.request(request_type="get_total_capacity")
+            total = int(response.msg)
 
-            if filename.endswith(".txt"):
-                f = open(filename)
-                used = used + float(f.read())
-                #LOG.debug(lines)
-                continue
-            else:
-                continue
-        '''
-
-        path = os.path.expanduser('~') + "/eos_shares"
-        used = 0
-        #print(os.listdir(path))
-
-        for root, directories, files in os.walk(path):
-
-            for file in files:
-
-                if file.endswith(".txt"):
-                    f = open(os.path.join(root, file))
-                    
-                    try:
-                        used = used + int(f.read())
-                        continue
-                    except ValueError:
-                        continue
-                else:
-                    continue
-
-        return used
+            free = total-used
+        except ValueError:
+            return None
+      
+        return free, total
         
     def _update_share_stats(self):
-        used = self.get_capacities()
-        
-        free = self.total_capacity - used
+        free, total = self.get_capacities()
 
         data = dict(
             storage_protocol='NFS',
             vendor_name='CERN',
             share_backend_name='EOS',
             driver_version='1.0',
-            total_capacity_gb=self.total_capacity,
+            total_capacity_gb=total,
             free_capacity_gb= free,
             reserved_percentage=5)
 

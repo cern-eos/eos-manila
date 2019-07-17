@@ -14,6 +14,8 @@ EOS_PROTOCOL = "EOS"
 # create a class to define the server functions
 class EOSServicer(eos_pb2_grpc.EOSServicer):
    
+    ''' HELPER FUNCTIONS '''
+
     def validate_auth(self, key=None):
         return True
 
@@ -22,6 +24,9 @@ class EOSServicer(eos_pb2_grpc.EOSServicer):
         response.msg = message
         response.code = code
         return response
+   
+    ''' ----------------- '''
+
 
     def CreateShare(self, request, context):       
         share_location = eos.create_share(request)
@@ -29,7 +34,7 @@ class EOSServicer(eos_pb2_grpc.EOSServicer):
         if not os.path.isdir(share_location):
            response = self.generate_response(message="Could not create share", code=-1)
         else:
-           response = self.generate_response(message="Share successfully created", code=1)
+           response = self.generate_response(message=share_location, code=1)
         
         eos.report(action='added', response=response)
         return response
@@ -47,17 +52,27 @@ class EOSServicer(eos_pb2_grpc.EOSServicer):
 
     def ExtendShare(self, request, context):
         eos.change_share_size(request)
-        return self.generate_response()
+        return self.generate_response(message="Share extension successful", code=1)
 
     def ShrinkShare(self, request, context):
         eos.change_share_size(request)
-        return self.generate_response()
+        return self.generate_response(message="Share shrinkage successful", code=1)
+
+    def GetUsedCapacity(self, request, context):
+        return self.generate_response(message=eos.get_used_capacity(), code=1)
+
+    def GetTotalCapacity(self, request, context):
+        return self.generate_response(message="50", code=1) #arbitrary total capacity
+
+    ''' FUNCTION ROUTING '''
 
     switcher = {
         "create_share": CreateShare,
         "delete_share": DeleteShare,
         "extend_share": ExtendShare,
-        "shrink_share": ShrinkShare
+        "shrink_share": ShrinkShare,
+        "get_used_capacity": GetUsedCapacity,
+        "get_total_capacity": GetTotalCapacity
     }
 
     def ServerRequest(self, request, context):

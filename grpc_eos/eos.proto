@@ -14,32 +14,6 @@ message Request {
    string admin_egroup = 11;
 }
 
-message CreateShareRequest {
-   string creator = 1;
-   string name = 2;
-   string id = 3; 
-   int32 size = 4;  
-}
-
-message DeleteShareRequest {
-   string id = 1;
-   string creator = 2;
-}
-
-message ExtendShareRequest {
-   string creator = 1;
-   string id = 2;
-   int32 new_size = 3;
-}
-
-message ShrinkShareRequest {
-   string creator = 1;
-   string id = 2;
-   int32 new_size = 3;
-}
-
-message GetCapacityRequest {}
-
 message Response {
    string msg = 1;
    int32 code = 2;
@@ -47,10 +21,5 @@ message Response {
 
 service EOS {
    rpc ServerRequest(Request) returns (Response) {}
-   rpc CreateShare(CreateShareRequest) returns (Response) {}
-   rpc DeleteShare(DeleteShareRequest) returns (Response) {}
-   rpc ExtendShare(ExtendShareRequest) returns (Response) {}
-   rpc ShrinkShare(ShrinkShareRequest) returns (Response) {}
-   rpc GetCapacity(GetCapacityRequest) returns (Response) {}
 }
 

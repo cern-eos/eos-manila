@@ -32,6 +32,28 @@ def change_share_size(request):
    file.write(str(request.quota))
    file.close()
 
-
 #def shrink_share(request):
+#def extend_share(request):
+
+def get_used_capacity():
+   # if the eos_shares path does not exist, create it so that get_capacities does not fail
+   if not os.path.isdir(os.path.expanduser('~') + "/eos_shares/"):
+      os.mkdir(os.path.expanduser('~') + "/eos_shares")
+      return "0"
+
+   path = os.path.expanduser('~') + "/eos_shares"
+   used = 0
+
+   for root, directories, files in os.walk(path):
+       for file in files:
+           if file.endswith(".txt"):
+               f = open(os.path.join(root, file))                    
+               try:
+                   used = used + int(f.read())
+                   continue                    
+               except ValueError:
+                   continue
+           else:
+               continue
    
+   return str(used)
