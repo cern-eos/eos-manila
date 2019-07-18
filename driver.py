@@ -77,7 +77,7 @@ class EOSDriver(driver.ExecuteMixin, driver.ShareDriver):
         self.report(response)
 
         #should return the location of where the share is located on the server
-        return response.msg #'~/eos_shares/' + share["user_id"] + "/" + share["display_name"]
+        return response.msg
 
     def create_share_from_snapshot(self, context, share, snapshot,
                                    share_server=None):
@@ -85,20 +85,17 @@ class EOSDriver(driver.ExecuteMixin, driver.ShareDriver):
 
     def delete_share(self, context, share, share_server=None):
         user = context.to_dict()["user_id"]
-        #request = eos_pb2.DeleteShareRequest(id=share["id"], creator=user)
-        #response = self.grpc_client.DeleteShare(request)
-
         response = self.request(request_type="delete_share", share=share, context=context)
         self.report(response)
 
     def extend_share(self, share, new_size, share_server=None):
-        request = eos_pb2.ExtendShareRequest(creator=share["user_id"], id=share["id"], new_size=new_size)
-        response = self.grpc_client.ExtendShare(request)
+        share["size"] = new_size
+        response = self.request(request_type="extend_share", share=share)
         self.report(response)
 
     def shrink_share(self, share, new_size, share_server=None):
-        request = eos_pb2.ShrinkShareRequest(creator=share["user_id"], id=share["id"], new_size=new_size)
-        response = self.grpc_client.ShrinkShare(request)
+        share["size"] = new_size
+        response = self.request(request_type="shrink_share", share=share)
         self.report(response)
 
     def ensure_share(self, context, share, share_server=None):
