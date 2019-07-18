@@ -3,11 +3,13 @@ import shutil
 #import string
 #import random
 
+BEGIN_PATH = os.path.expanduser('~') + "/eos_shares/"
+
 def report(action, response):
-   print("Share " + action  + ": " +  response.msg + ". Code: " + str(response.code))
+   print("Share " + action  + ": " +  response.msg + ". Code: " + str(response.code) + "\n")
 
 def create_share(request):   
-   path = os.path.expanduser('~') + "/eos_shares/" + request.creator + "/" + request.share_name
+   path = BEGIN_PATH + request.creator + "/" + request.share_name
    
    if os.path.isdir(path):
       path = "1"
@@ -22,13 +24,13 @@ def create_share(request):
    return path
 
 def delete_share(request):
-   old_path = os.path.expanduser('~') + "/eos_shares/" + request.creator + "/" + request.share_name
+   old_path = BEGIN_PATH + request.creator + "/" + request.share_name
    shutil.rmtree(old_path, ignore_errors=True)
    
    return old_path 
    
 def change_share_size(request):
-   file = open(os.path.expanduser('~') + "/eos_shares/" + request.creator + "/" + request.share_name + "/size.txt", 'w')
+   file = open(BEGIN_PATH + request.creator + "/" + request.share_name + "/size.txt", 'w')
    file.write(str(request.quota))
    file.close()
 
@@ -37,11 +39,11 @@ def change_share_size(request):
 
 def get_used_capacity():
    # if the eos_shares path does not exist, create it so that get_capacities does not fail
-   if not os.path.isdir(os.path.expanduser('~') + "/eos_shares/"):
-      os.mkdir(os.path.expanduser('~') + "/eos_shares")
+   if not os.path.isdir(BEGIN_PATH):
+      os.mkdir(BEGIN_PATH)
       return "0"
 
-   path = os.path.expanduser('~') + "/eos_shares"
+   path = BEGIN_PATH
    used = 0
 
    for root, directories, files in os.walk(path):

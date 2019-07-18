@@ -10,6 +10,7 @@ import eos_pb2_grpc
 import eos
 
 EOS_PROTOCOL = "EOS"
+AUTH_KEY = "BakTIcB08XwQ7vNvagi8"
 
 # create a class to define the server functions
 class EOSServicer(eos_pb2_grpc.EOSServicer):
@@ -17,7 +18,7 @@ class EOSServicer(eos_pb2_grpc.EOSServicer):
     ''' HELPER FUNCTIONS '''
 
     def validate_auth(self, key=None):
-        return key == "BakTIcB08XwQ7vNvagi8"
+        return AUTH_KEY == "BakTIcB08XwQ7vNvagi8"
 
     def generate_response(self, message=None, code=None):
         response = eos_pb2.Response()
@@ -26,7 +27,6 @@ class EOSServicer(eos_pb2_grpc.EOSServicer):
         return response
    
     ''' ----------------- '''
-
 
     def CreateShare(self, request, context):       
         share_location = eos.create_share(request)
@@ -76,6 +76,8 @@ class EOSServicer(eos_pb2_grpc.EOSServicer):
     }
 
     def ServerRequest(self, request, context):
+        print(request)
+
         #check the auth key & check the protocol type
         if request.protocol == EOS_PROTOCOL and self.validate_auth(key=request.auth_key):
             #route the request to the correct method/function

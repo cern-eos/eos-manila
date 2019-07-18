@@ -24,7 +24,7 @@ import grpc_eos.eos_pb2 as eos_pb2
 import grpc_eos.eos_pb2_grpc as eos_pb2_grpc
 
 from manila.share import driver
-from manila.tests import fake_service_instance
+from manila import exception
 
 LOG = log.getLogger(__name__)
 
@@ -41,7 +41,7 @@ eos_opts = [
 CONF = cfg.CONF
 CONF.register_opts(eos_opts)   
 
-class EOSDriver(driver.ShareDriver):
+class EOSDriver(driver.ExecuteMixin, driver.ShareDriver):
 
     def __init__(self, *args, **kwargs):
         super(EOSDriver, self).__init__(False, *args, **kwargs)
@@ -54,24 +54,27 @@ class EOSDriver(driver.ShareDriver):
 
     def request(self, request_type, share=None, context=None):         
         auth_key = self.configuration.eos_authentication_key
-        protocol = "EOS"
 
         if not share:
+            protocol = "EOS"
             request_proto = eos_pb2.Request(request_type=request_type, auth_key=auth_key, protocol=protocol)
         else:
+            protocol = share["share_proto"]
             request_proto = eos_pb2.Request(request_type=request_type, auth_key=auth_key, protocol=protocol, share_name=share["display_name"], description=share["display_description"], share_id=share["id"], share_group_id=share["share_group_id"], quota=share["size"], creator=share["user_id"], egroup=share["project_id"], admin_egroup="")
         
         response = self.grpc_client.ServerRequest(request_proto)
-
         return response
+
+    def report(self, response):
+        if (response.code < 0):
+            raise exception.EOSException(msg=response.msg)
 
     def unmanage(self, share, share_server=None):
         LOG.debug("Fake share driver: unmanage")
 
     def create_share(self, context, share, share_server=None):
         response = self.request(request_type="create_share", share=share, context=context)
-        if response.code < 0:
-           return None
+        self.report(response)
 
         #should return the location of where the share is located on the server
         return response.msg #'~/eos_shares/' + share["user_id"] + "/" + share["display_name"]
@@ -86,15 +89,17 @@ class EOSDriver(driver.ShareDriver):
         #response = self.grpc_client.DeleteShare(request)
 
         response = self.request(request_type="delete_share", share=share, context=context)
-
+        self.report(response)
 
     def extend_share(self, share, new_size, share_server=None):
         request = eos_pb2.ExtendShareRequest(creator=share["user_id"], id=share["id"], new_size=new_size)
         response = self.grpc_client.ExtendShare(request)
+        self.report(response)
 
     def shrink_share(self, share, new_size, share_server=None):
         request = eos_pb2.ShrinkShareRequest(creator=share["user_id"], id=share["id"], new_size=new_size)
         response = self.grpc_client.ShrinkShare(request)
+        self.report(response)
 
     def ensure_share(self, context, share, share_server=None):
         pass
@@ -121,6 +126,8 @@ class EOSDriver(driver.ShareDriver):
         pass
     
     def get_capacities(self):
+        response=""
+
         try:
             response = self.request(request_type="get_used_capacity")
             used = int(response.msg)
@@ -130,7 +137,7 @@ class EOSDriver(driver.ShareDriver):
 
             free = total-used
         except ValueError:
-            return None
+            raise exception.EOSException(msg=response.msg)
       
         return free, total
         
@@ -138,7 +145,7 @@ class EOSDriver(driver.ShareDriver):
         free, total = self.get_capacities()
 
         data = dict(
-            storage_protocol='NFS',
+            storage_protocol='EOS',
             vendor_name='CERN',
             share_backend_name='EOS',
             driver_version='1.0',
