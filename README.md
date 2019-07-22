@@ -14,7 +14,50 @@ This driver currently supports:
  - Extending a Share
  - Shrinking a Share
 
-## Manila Installation With DevStack
+## OpenStack Manila Installation With DevStack
+To begin using the EOS Manila driver with OpenStack, it is first necessary to install OpenStack with Manila support. To do this, we will be using **DevStack**: scripts meant to seamlessly build an OpenStack environment on your desired machine. 
+
+After building a [compatible](https://docs.openstack.org/sahara/latest/contributor/devstack.html) Linux machine dedicated to OpenStack, using *root*, run the following commands:
+
+1. Create a "stack" user with sudo privileges.
+
+```sh
+$ sudo useradd -s /bin/bash -d /opt/stack -m stack
+$ echo "stack ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/stack
+```
+
+2. Switch to the "stack" user.
+
+```sh
+$ sudo su - stack
+```
+
+3. Clone the DevStack repository and change directories into the newly downloaded folder.
+
+```sh
+$ git clone https://opendev.org/openstack/devstack
+$ cd devstack
+```
+4. Copy "local.conf" file from /devstack/samples into the root folder.  "local.conf".
+
+```
+$ cp samples/local.conf ./
+```
+
+5. Add the following lines at the bottom of the local.conf just copied into the root directory of the devstack folder.
+
+```sh
+enable_plugin manila https://github.com/openstack/manila
+enable_plugin manila-ui https://github.com/openstack/manila-ui
+```
+
+5. Start the install.
+
+```sh
+$ ./stack.sh
+```
+
+*The installation will take 30-40 minutes, depending on the speed of your internet connection. Devstack will supply sample admin and demo accounts to use freely.*
 
 ## Configuring the EOS Driver
 
@@ -22,3 +65,4 @@ This driver currently supports:
 
 ## References:
 \[1\]: [CERN EOS Service Main Page](http://information-technology.web.cern.ch/services/eos-service)
+\[2\]: [DevStack Documentation](https://docs.openstack.org/devstack/latest/)
