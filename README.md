@@ -62,7 +62,11 @@ $ ./stack.sh
 
 *The installation will take 30-40 minutes, depending on the speed of your internet connection. After it has finished, Devstack will supply sample admin and demo accounts to use freely.*
 
+**NOTE: All subsquent instructions assume that DevStack was installed in stack's home directory.**
+
 ## Enabling EOS as a Share Protocol
+As mentioned previously, the EOS driver will only communicate with Manila drivers that employ the EOS protocol. Otherwise, the driver will deny permisson to the request. Use the instructions below to enable EOS as a share protocol on OpenStack Manila.
+
 
 1. Modify the Manila configuration file to add EOS as a share protocol.
 ```sh
@@ -138,8 +142,6 @@ Before beginning these series of steps, ensure that:
 
 * [you are recognized as an admin user](https://docs.oracle.com/cd/E78305_01/E78304/html/openstack-envars.html) on your OpenStack instance.
 * EOS is integrated as a share protocol as described in the section *Enabling EOS as a Share Protocol*.
-
-(*These instructions assume that DevStack was installed in stack's home directory.*)
 
 1. Navigate to the OpenStack Manila drivers folder and clone the repository.
 
