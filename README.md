@@ -62,40 +62,19 @@ $ ./stack.sh
 
 *The installation will take 30-40 minutes, depending on the speed of your internet connection. After it has finished, Devstack will supply sample admin and demo accounts to use freely.*
 
-## Configuring the EOS Driver
+## Enabling EOS as a Share Protocol
 
-Before beginning these series of steps, [ensure that you are recognized as an admin user](https://docs.oracle.com/cd/E78305_01/E78304/html/openstack-envars.html) on your OpenStack instance. 
-
-*These instructions assume that DevStack was installed in stack's home directory.*
-
-1. Navigate to the OpenStack Manila drivers folder and clone the repository.
-
-```sh
-$ cd ~/manila/manila/share/drivers/eos-manila
-$ git clone https://github.com/cern-eos/eos-manila.git
-```
-2. Modify the bottom of Manila configuration file.
+1. Modify the Manila configuration file to add EOS as a share protocol.
 ```sh
 $ vi /etc/manila/manila.conf
 ```
 
-3. Add a new stanza to manila.conf for the EOS Manila driver configuration:
 ```sh
-[eos]
-driver_handles_share_servers = False
-share_backend_name = EOS
-share_driver = manila.share.drivers.eos-manila.driver.EOSDriver
-auth_key = BakTIcB08XwQ7vNvagi8 # arbitrary authentication key defined in server
-```
-
-4. Enable the EOS Manila driver in the [DEFAULT] stanza of the manila.conf file and enable the EOS protocol.
-```sh
-enabled_share_backends = eos
 ...
 enabled_share_protocols = NFS,CIFS,EOS
 ```
 
-5. Modify Manila UI to enable EOS as a share protocol.
+2. Modify Manila UI to enable EOS as a share protocol.
 ```sh
 $ vi ~/manila-ui/manila_ui/local/local_settings.d/_90_manila_shares.py
 ```
@@ -113,7 +92,7 @@ OPENSTACK_MANILA_FEATURES = {
 }
 ```
 
-6. Register the configuration options for the EOS Manila Driver.
+3. Register the configuration options for the EOS Manila Driver.
 ```sh
 $ vi ~/manila/manila/opts.py
 ```
@@ -128,7 +107,7 @@ _global_opt_lists = [
 ]
 ```
 
-7. Define EOSException.
+4. Define EOSException.
 ```sh
 $ vi ~/manila/manila/exception.py
 ```
@@ -138,7 +117,7 @@ class EOSException(ManilaException):
     message = _("EOS exception occurred: %(msg)s")
 ```
 
-8. Add "EOS" as a share protocol constant.
+5. Add "EOS" as a share protocol constant.
 ```sh
 vi ~/manila/manila/common/constants.py
 ```
@@ -148,12 +127,54 @@ SUPPORTED_SHARE_PROTOCOLS = (
     'NFS', 'CIFS', 'GLUSTERFS', 'HDFS', 'CEPHFS', 'MAPRFS', 'EOS')
 ```
 
-9. Create a new share type for EOS.
+6. Restart all Manila services.
+```sh
+$ sudo systemctl restart devstack@m*
+```
+
+## Configuring the EOS Driver
+
+Before beginning these series of steps, ensure that:
+
+* [you are recognized as an admin user](https://docs.oracle.com/cd/E78305_01/E78304/html/openstack-envars.html) on your OpenStack instance.
+* EOS is integrated as a share protocol as described in the section *Enabling EOS as a Share Protocol*.
+
+(*These instructions assume that DevStack was installed in stack's home directory.*)
+
+1. Navigate to the OpenStack Manila drivers folder and clone the repository.
+
+```sh
+$ cd ~/manila/manila/share/drivers/eos-manila
+$ git clone https://github.com/cern-eos/eos-manila.git
+```
+
+2. Modify the bottom of Manila configuration file.
+```sh
+$ vi /etc/manila/manila.conf
+```
+
+3. Add a new stanza to manila.conf for the EOS Manila driver configuration:
+```sh
+[eos]
+driver_handles_share_servers = False
+share_backend_name = EOS
+share_driver = manila.share.drivers.eos-manila.driver.EOSDriver
+auth_key = BakTIcB08XwQ7vNvagi8 # arbitrary authentication key defined in server
+```
+
+4. Enable the EOS Manila driver in the [DEFAULT] stanza of the manila.conf file and, if you have not aready done so, enable the EOS protocol.
+```sh
+enabled_share_backends = eos
+...
+enabled_share_protocols = NFS,CIFS,EOS
+```
+
+5. Create a new share type for EOS.
 ```sh
 $ manila type-create eos False --extra-specs share_backend_name=EOS
 ```
 
-10. Restart all Manila services.
+6. Restart all Manila services.
 ```sh
 $ sudo systemctl restart devstack@m*
 ```
