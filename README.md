@@ -3,6 +3,9 @@ The purpose of this driver is to directly connect CERN users with the OpenStack 
 
 The driver in this repository is a generic baseline to understand how OpenStack Manila handles calls made to drivers in order to communicate with outside interfaces. Through this sample driver we are able to "interface" with the local machine in order to create fake shares in the logged-in user's home directory. The server-side of this system employs a Python GRPC server to process requests. All requests must use the EOS protocol and a valid "fake" authentication key.
 
+### About OpenStack
+OpenStack is a popular open source cloud-computing software platform. The system makes use of commodity hardware as its main source for computing and is tied in with several other services, such as networking and authentication. [] 
+
 ### About EOS Storage
 EOS is a disk-based, low-latency storage service. Having a highly-scalable hierarchical namespace, and with data access possible by the XROOT protocol, it was initially used for physics data storage. Today, EOS provides storage for both physics and user use cases. The main target area for the EOS is physics data analysis, which is characterised by many concurrent users, a significant fraction of random data access and a large file-open rate \[1\]. 
 
@@ -17,7 +20,7 @@ This driver currently supports:
 ## OpenStack Manila Installation With DevStack
 To begin using the EOS Manila driver with OpenStack, it is first necessary to install OpenStack with Manila support. To do this, we will be using **DevStack**: scripts meant to seamlessly build an OpenStack environment on your desired machine. 
 
-After building a [compatible](https://docs.openstack.org/sahara/latest/contributor/devstack.html) Linux machine dedicated to OpenStack, using *root*, run the following commands:
+After building a [compatible](https://docs.openstack.org/sahara/latest/contributor/devstack.html) Linux machine dedicated to OpenStack, using your machine's *root* account, run the following commands:
 
 1. Create a "stack" user with sudo privileges.
 
@@ -38,13 +41,13 @@ $ sudo su - stack
 $ git clone https://opendev.org/openstack/devstack
 $ cd devstack
 ```
-4. Copy "local.conf" file from /devstack/samples into the root folder.  "local.conf".
+4. Copy "local.conf" file from /devstack/samples into the devstack folder. 
 
 ```
 $ cp samples/local.conf ./
 ```
 
-5. Add the following lines at the bottom of the local.conf just copied into the root directory of the devstack folder.
+5. Add the following lines at the bottom of the local.conf file just copied into the root directory of the devstack folder.
 
 ```sh
 enable_plugin manila https://github.com/openstack/manila
@@ -57,12 +60,23 @@ enable_plugin manila-ui https://github.com/openstack/manila-ui
 $ ./stack.sh
 ```
 
-*The installation will take 30-40 minutes, depending on the speed of your internet connection. Devstack will supply sample admin and demo accounts to use freely.*
+*The installation will take 30-40 minutes, depending on the speed of your internet connection. After it has finished, Devstack will supply sample admin and demo accounts to use freely.*
 
 ## Configuring the EOS Driver
 
+Before beginning these series of steps, [ensure that you are recognized as an admin user](https://docs.oracle.com/cd/E78305_01/E78304/html/openstack-envars.html) on your OpenStack instance. 
+
+1. Place 
+
+
+## Running the Sample GRPC Server with EOS Manila Driver
+
+
 ## Modifying OpenStack UI for End-User 
 
+
 ## References:
-\[1\]: [CERN EOS Service Main Page](http://information-technology.web.cern.ch/services/eos-service)
-\[2\]: [DevStack Documentation](https://docs.openstack.org/devstack/latest/)
+* \[1\]: []()
+* \[2\]: [CERN EOS Service Main Page](http://information-technology.web.cern.ch/services/eos-service)
+* \[3\]: [DevStack Documentation](https://docs.openstack.org/devstack/latest/)
+* \[4\]: [Setting Environment Variables for OpenStack CLI Clients](https://docs.oracle.com/cd/E78305_01/E78304/html/openstack-envars.html)
