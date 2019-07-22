@@ -148,7 +148,12 @@ SUPPORTED_SHARE_PROTOCOLS = (
     'NFS', 'CIFS', 'GLUSTERFS', 'HDFS', 'CEPHFS', 'MAPRFS', 'EOS')
 ```
 
-9. Restart all Manila services.
+9. Create a new share type for EOS.
+```sh
+$ manila type-create eos False --extra-specs share_backend_name=EOS
+```
+
+10. Restart all Manila services.
 ```sh
 $ sudo systemctl restart devstack@m*
 ```
