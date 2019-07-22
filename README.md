@@ -65,7 +65,7 @@ $ ./stack.sh
 **NOTE: All subsquent instructions assume that DevStack was installed in stack's home directory.**
 
 ## Enabling EOS as a Share Protocol
-As mentioned previously, the EOS driver will only communicate with Manila drivers that employ the EOS protocol. Otherwise, the driver will deny permisson to the request. Use the instructions below to enable EOS as a share protocol on OpenStack Manila.
+As mentioned previously, the EOS driver will only communicate with Manila drivers that employ the EOS protocol. In any other case, the driver will deny permisson to the request. Use the instructions below to enable EOS as a share protocol on OpenStack Manila.
 
 
 1. Modify the Manila configuration file to add EOS as a share protocol.
@@ -75,6 +75,7 @@ $ vi /etc/manila/manila.conf
 
 ```sh
 ...
+#modify the other enabled share protocols as neccesary
 enabled_share_protocols = NFS,CIFS,EOS
 ```
 
@@ -136,12 +137,12 @@ SUPPORTED_SHARE_PROTOCOLS = (
 $ sudo systemctl restart devstack@m*
 ```
 
-## Configuring the EOS Driver
+## Configuring the EOS Manila Driver
 
 Before beginning these series of steps, ensure that:
 
-* [you are recognized as an admin user](https://docs.oracle.com/cd/E78305_01/E78304/html/openstack-envars.html) on your OpenStack instance.
-* EOS is integrated as a share protocol as described in the section *Enabling EOS as a Share Protocol*.
+* [You are recognized as an admin user](https://docs.oracle.com/cd/E78305_01/E78304/html/openstack-envars.html) on your OpenStack instance.
+* EOS is integrated as a share protocol as described in the section "*Enabling EOS as a Share Protocol*."
 
 1. Navigate to the OpenStack Manila drivers folder and clone the repository.
 
@@ -166,9 +167,10 @@ auth_key = BakTIcB08XwQ7vNvagi8 # arbitrary authentication key defined in server
 
 4. Enable the EOS Manila driver in the [DEFAULT] stanza of the manila.conf file and, if you have not aready done so, enable the EOS protocol.
 ```sh
+#modify the other enabled share backends/protocols as neccesary
 enabled_share_backends = eos
 ...
-enabled_share_protocols = NFS,CIFS,EOS
+enabled_share_protocols = NFS,CIFS,EOS 
 ```
 
 5. Create a new share type for EOS.
@@ -182,7 +184,18 @@ $ sudo systemctl restart devstack@m*
 ```
 
 ## Running the Sample GRPC Server with EOS Manila Driver
+In the case that you would like to experiment with the capabilities of this driver without a dedicated server, this repository comes equipped with a sample GRPC server.
 
+The GRPC server hosts "shares" in stack's home directory in a folder called 'eos_shares.' Here, the shares are organized according to which user created it. Each time a share is created, a share folder appears in the user's folder with a .txt file indicating the size of the share.
+
+To run the server:
+
+```sh
+$ cd grpc_eos
+$ python server.py 
+```
+
+With each request, the server will print the parameters of the request as well as if the requests were successful or not.
 
 ## Modifying OpenStack UI for End-User 
 
