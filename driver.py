@@ -60,7 +60,7 @@ class EOSDriver(driver.ExecuteMixin, driver.ShareDriver):
             request_proto = eos_pb2.Request(request_type=request_type, auth_key=auth_key, protocol=protocol)
         else:
             protocol = share["share_proto"]
-            request_proto = eos_pb2.Request(request_type=request_type, auth_key=auth_key, protocol=protocol, share_name=share["display_name"], description=share["display_description"], share_id=share["id"], share_group_id=share["share_group_id"], quota=share["size"], creator=share["user_id"], egroup=share["project_id"], admin_egroup="")
+            request_proto = eos_pb2.Request(request_type=request_type, auth_key=auth_key, protocol=protocol, share_name=share["display_name"], description=share["display_description"], share_id=share["id"], share_group_id=share["share_group_id"], quota=share["size"], creator=share["user_id"], egroup=share["project_id"], admin_egroup="", share_location=share["export_location"])
         
         response = self.grpc_client.ServerRequest(request_proto)
         return response
@@ -69,9 +69,6 @@ class EOSDriver(driver.ExecuteMixin, driver.ShareDriver):
         if (response.code < 0):
             raise exception.EOSException(msg=response.msg)
 
-    def unmanage(self, share, share_server=None):
-        LOG.debug("Fake share driver: unmanage")
-
     def create_share(self, context, share, share_server=None):
         response = self.request(request_type="create_share", share=share, context=context)
         self.report(response)
@@ -79,9 +76,21 @@ class EOSDriver(driver.ExecuteMixin, driver.ShareDriver):
         #should return the location of where the share is located on the server
         return response.msg
 
-    def create_share_from_snapshot(self, context, share, snapshot,
-                                   share_server=None):
-        return ['/fake/path', '/fake/path2']
+    def manage_existing(self, share, driver_options):
+        # Calculate quota for managed dataset
+        quota = driver_options.get("size")
+        
+        if quota:
+            share["size"] = quota
+
+        response = self.request(request_type="manage_existing", share=share)
+        self.report(response)
+ 
+        return {"size": int(response.msg), "export_locations": [{"path": share["export_location"]}]}
+
+    def unmanage(self, share, share_server=None):
+        response = self.request(request_type="unmanage", share=share)
+        self.report(response)
 
     def delete_share(self, context, share, share_server=None):
         user = context.to_dict()["user_id"]

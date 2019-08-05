@@ -58,6 +58,27 @@ class EOSServicer(eos_pb2_grpc.EOSServicer):
         eos.change_share_size(request)
         return self.generate_response(message="Share shrinkage successful", code=1)
 
+    def ManageExisting(self, request, context):
+        size = eos.manage_existing(request)
+        
+        if int(size) < 0:
+           response = self.generate_response(message="Could not manage share", code=-1)
+        else:
+           response = self.generate_response(message=size, code=1)
+
+        eos.report(action='managed', response=response)
+        return response
+
+    def Unmanage(self, request, context):
+        try:
+            eos.unmanage(request)
+            response = self.generate_response(message="Successfully unmanaged share", code=1)
+        except ValueError:
+            response = self.generate_response(message="Could not unmanage share", code=-1)
+
+        eos.report(action="unmanaged", response=response)
+        return response
+
     def GetUsedCapacity(self, request, context):
         return self.generate_response(message=eos.get_used_capacity(), code=1)
 
@@ -71,6 +92,8 @@ class EOSServicer(eos_pb2_grpc.EOSServicer):
         "delete_share": DeleteShare,
         "extend_share": ExtendShare,
         "shrink_share": ShrinkShare,
+        "manage_existing": ManageExisting,
+        "unmanage": Unmanage,
         "get_used_capacity": GetUsedCapacity,
         "get_total_capacity": GetTotalCapacity
     }

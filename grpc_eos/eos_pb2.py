@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\teos.proto\"\xdc\x01\n\x07Request\x12\x14\n\x0crequest_type\x18\x01 \x01(\t\x12\x10\n\x08\x61uth_key\x18\x02 \x01(\t\x12\x10\n\x08protocol\x18\x03 \x01(\t\x12\x12\n\nshare_name\x18\x04 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\x12\x10\n\x08share_id\x18\x06 \x01(\t\x12\x16\n\x0eshare_group_id\x18\x07 \x01(\t\x12\r\n\x05quota\x18\x08 \x01(\x05\x12\x0f\n\x07\x63reator\x18\t \x01(\t\x12\x0e\n\x06\x65group\x18\n \x01(\t\x12\x14\n\x0c\x61\x64min_egroup\x18\x0b \x01(\t\"%\n\x08Response\x12\x0b\n\x03msg\x18\x01 \x01(\t\x12\x0c\n\x04\x63ode\x18\x02 \x01(\x05\x32-\n\x03\x45OS\x12&\n\rServerRequest\x12\x08.Request\x1a\t.Response\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\teos.proto\"\xf4\x01\n\x07Request\x12\x14\n\x0crequest_type\x18\x01 \x01(\t\x12\x10\n\x08\x61uth_key\x18\x02 \x01(\t\x12\x10\n\x08protocol\x18\x03 \x01(\t\x12\x12\n\nshare_name\x18\x04 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\x12\x10\n\x08share_id\x18\x06 \x01(\t\x12\x16\n\x0eshare_group_id\x18\x07 \x01(\t\x12\r\n\x05quota\x18\x08 \x01(\x05\x12\x0f\n\x07\x63reator\x18\t \x01(\t\x12\x0e\n\x06\x65group\x18\n \x01(\t\x12\x14\n\x0c\x61\x64min_egroup\x18\x0b \x01(\t\x12\x16\n\x0eshare_location\x18\x0c \x01(\t\"%\n\x08Response\x12\x0b\n\x03msg\x18\x01 \x01(\t\x12\x0c\n\x04\x63ode\x18\x02 \x01(\x05\x32-\n\x03\x45OS\x12&\n\rServerRequest\x12\x08.Request\x1a\t.Response\"\x00\x62\x06proto3')
 )
 
 
@@ -110,6 +110,13 @@ _REQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='share_location', full_name='Request.share_location', index=11,
+      number=12, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -123,7 +130,7 @@ _REQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=14,
-  serialized_end=234,
+  serialized_end=258,
 )
 
 
@@ -160,8 +167,8 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=236,
-  serialized_end=273,
+  serialized_start=260,
+  serialized_end=297,
 )
 
 DESCRIPTOR.message_types_by_name['Request'] = _REQUEST
@@ -190,8 +197,8 @@ _EOS = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=275,
-  serialized_end=320,
+  serialized_start=299,
+  serialized_end=344,
   methods=[
   _descriptor.MethodDescriptor(
     name='ServerRequest',

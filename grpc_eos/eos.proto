@@ -12,6 +12,7 @@ message Request {
    string creator = 9;
    string egroup = 10;
    string admin_egroup = 11;
+   string share_location = 12;
 }
 
 message Response {
