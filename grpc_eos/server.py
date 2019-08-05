@@ -21,7 +21,7 @@ class EOSServicer(eos_pb2_grpc.EOSServicer):
         return AUTH_KEY == "BakTIcB08XwQ7vNvagi8"
 
     def generate_response(self, message=None, code=None):
-        response = eos_pb2.Response()
+        response = eos_pb2.ManilaResponse()
         response.msg = message
         response.code = code
         return response
@@ -98,7 +98,7 @@ class EOSServicer(eos_pb2_grpc.EOSServicer):
         "get_total_capacity": GetTotalCapacity
     }
 
-    def ServerRequest(self, request, context):
+    def ManilaServerRequest(self, request, context):
         print(request)
 
         #check the auth key & check the protocol type

@@ -4,7 +4,7 @@ import grpc
 import eos_pb2 as eos__pb2
 
 
-class EOSStub(object):
+class EosStub(object):
   # missing associated documentation comment in .proto file
   pass
 
@@ -15,13 +15,13 @@ class EOSStub(object):
       channel: A grpc.Channel.
     """
     self.ServerRequest = channel.unary_unary(
-        '/EOS/ServerRequest',
-        request_serializer=eos__pb2.Request.SerializeToString,
-        response_deserializer=eos__pb2.Response.FromString,
+        '/Eos/ServerRequest',
+        request_serializer=eos__pb2.ManilaRequest.SerializeToString,
+        response_deserializer=eos__pb2.ManilaResponse.FromString,
         )
 
 
-class EOSServicer(object):
+class EosServicer(object):
   # missing associated documentation comment in .proto file
   pass
 
@@ -33,14 +33,14 @@ class EOSServicer(object):
     raise NotImplementedError('Method not implemented!')
 
 
-def add_EOSServicer_to_server(servicer, server):
+def add_EosServicer_to_server(servicer, server):
   rpc_method_handlers = {
       'ServerRequest': grpc.unary_unary_rpc_method_handler(
           servicer.ServerRequest,
-          request_deserializer=eos__pb2.Request.FromString,
-          response_serializer=eos__pb2.Response.SerializeToString,
+          request_deserializer=eos__pb2.ManilaRequest.FromString,
+          response_serializer=eos__pb2.ManilaResponse.SerializeToString,
       ),
   }
   generic_handler = grpc.method_handlers_generic_handler(
-      'EOS', rpc_method_handlers)
+      'Eos', rpc_method_handlers)
   server.add_generic_rpc_handlers((generic_handler,))

@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-message Request {
+message ManilaRequest {
    string request_type = 1;
    string auth_key = 2;
    string protocol = 3;
@@ -15,12 +15,12 @@ message Request {
    string share_location = 12;
 }
 
-message Response {
+message ManilaResponse {
    string msg = 1;
    int32 code = 2;
 }
 
-service EOS {
-   rpc ServerRequest(Request) returns (Response) {}
+service Eos {
+   rpc ManilaServerRequest(ManilaRequest) returns (ManilaResponse) {}
 }
 

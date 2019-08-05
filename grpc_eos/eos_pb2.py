@@ -20,98 +20,98 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\teos.proto\"\xf4\x01\n\x07Request\x12\x14\n\x0crequest_type\x18\x01 \x01(\t\x12\x10\n\x08\x61uth_key\x18\x02 \x01(\t\x12\x10\n\x08protocol\x18\x03 \x01(\t\x12\x12\n\nshare_name\x18\x04 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\x12\x10\n\x08share_id\x18\x06 \x01(\t\x12\x16\n\x0eshare_group_id\x18\x07 \x01(\t\x12\r\n\x05quota\x18\x08 \x01(\x05\x12\x0f\n\x07\x63reator\x18\t \x01(\t\x12\x0e\n\x06\x65group\x18\n \x01(\t\x12\x14\n\x0c\x61\x64min_egroup\x18\x0b \x01(\t\x12\x16\n\x0eshare_location\x18\x0c \x01(\t\"%\n\x08Response\x12\x0b\n\x03msg\x18\x01 \x01(\t\x12\x0c\n\x04\x63ode\x18\x02 \x01(\x05\x32-\n\x03\x45OS\x12&\n\rServerRequest\x12\x08.Request\x1a\t.Response\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\teos.proto\"\xfa\x01\n\rManilaRequest\x12\x14\n\x0crequest_type\x18\x01 \x01(\t\x12\x10\n\x08\x61uth_key\x18\x02 \x01(\t\x12\x10\n\x08protocol\x18\x03 \x01(\t\x12\x12\n\nshare_name\x18\x04 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\x12\x10\n\x08share_id\x18\x06 \x01(\t\x12\x16\n\x0eshare_group_id\x18\x07 \x01(\t\x12\r\n\x05quota\x18\x08 \x01(\x05\x12\x0f\n\x07\x63reator\x18\t \x01(\t\x12\x0e\n\x06\x65group\x18\n \x01(\t\x12\x14\n\x0c\x61\x64min_egroup\x18\x0b \x01(\t\x12\x16\n\x0eshare_location\x18\x0c \x01(\t\"+\n\x0eManilaResponse\x12\x0b\n\x03msg\x18\x01 \x01(\t\x12\x0c\n\x04\x63ode\x18\x02 \x01(\x05\x32\x39\n\x03\x45os\x12\x32\n\rServerRequest\x12\x0e.ManilaRequest\x1a\x0f.ManilaResponse\"\x00\x62\x06proto3')
 )
 
 
 
 
-_REQUEST = _descriptor.Descriptor(
-  name='Request',
-  full_name='Request',
+_MANILAREQUEST = _descriptor.Descriptor(
+  name='ManilaRequest',
+  full_name='ManilaRequest',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='request_type', full_name='Request.request_type', index=0,
+      name='request_type', full_name='ManilaRequest.request_type', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='auth_key', full_name='Request.auth_key', index=1,
+      name='auth_key', full_name='ManilaRequest.auth_key', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='protocol', full_name='Request.protocol', index=2,
+      name='protocol', full_name='ManilaRequest.protocol', index=2,
       number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='share_name', full_name='Request.share_name', index=3,
+      name='share_name', full_name='ManilaRequest.share_name', index=3,
       number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='description', full_name='Request.description', index=4,
+      name='description', full_name='ManilaRequest.description', index=4,
       number=5, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='share_id', full_name='Request.share_id', index=5,
+      name='share_id', full_name='ManilaRequest.share_id', index=5,
       number=6, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='share_group_id', full_name='Request.share_group_id', index=6,
+      name='share_group_id', full_name='ManilaRequest.share_group_id', index=6,
       number=7, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='quota', full_name='Request.quota', index=7,
+      name='quota', full_name='ManilaRequest.quota', index=7,
       number=8, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='creator', full_name='Request.creator', index=8,
+      name='creator', full_name='ManilaRequest.creator', index=8,
       number=9, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='egroup', full_name='Request.egroup', index=9,
+      name='egroup', full_name='ManilaRequest.egroup', index=9,
       number=10, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='admin_egroup', full_name='Request.admin_egroup', index=10,
+      name='admin_egroup', full_name='ManilaRequest.admin_egroup', index=10,
       number=11, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='share_location', full_name='Request.share_location', index=11,
+      name='share_location', full_name='ManilaRequest.share_location', index=11,
       number=12, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -130,26 +130,26 @@ _REQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=14,
-  serialized_end=258,
+  serialized_end=264,
 )
 
 
-_RESPONSE = _descriptor.Descriptor(
-  name='Response',
-  full_name='Response',
+_MANILARESPONSE = _descriptor.Descriptor(
+  name='ManilaResponse',
+  full_name='ManilaResponse',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='msg', full_name='Response.msg', index=0,
+      name='msg', full_name='ManilaResponse.msg', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='code', full_name='Response.code', index=1,
+      name='code', full_name='ManilaResponse.code', index=1,
       number=2, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -167,51 +167,51 @@ _RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=260,
-  serialized_end=297,
+  serialized_start=266,
+  serialized_end=309,
 )
 
-DESCRIPTOR.message_types_by_name['Request'] = _REQUEST
-DESCRIPTOR.message_types_by_name['Response'] = _RESPONSE
+DESCRIPTOR.message_types_by_name['ManilaRequest'] = _MANILAREQUEST
+DESCRIPTOR.message_types_by_name['ManilaResponse'] = _MANILARESPONSE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
-Request = _reflection.GeneratedProtocolMessageType('Request', (_message.Message,), {
-  'DESCRIPTOR' : _REQUEST,
+ManilaRequest = _reflection.GeneratedProtocolMessageType('ManilaRequest', (_message.Message,), {
+  'DESCRIPTOR' : _MANILAREQUEST,
   '__module__' : 'eos_pb2'
-  # @@protoc_insertion_point(class_scope:Request)
+  # @@protoc_insertion_point(class_scope:ManilaRequest)
   })
-_sym_db.RegisterMessage(Request)
+_sym_db.RegisterMessage(ManilaRequest)
 
-Response = _reflection.GeneratedProtocolMessageType('Response', (_message.Message,), {
-  'DESCRIPTOR' : _RESPONSE,
+ManilaResponse = _reflection.GeneratedProtocolMessageType('ManilaResponse', (_message.Message,), {
+  'DESCRIPTOR' : _MANILARESPONSE,
   '__module__' : 'eos_pb2'
-  # @@protoc_insertion_point(class_scope:Response)
+  # @@protoc_insertion_point(class_scope:ManilaResponse)
   })
-_sym_db.RegisterMessage(Response)
+_sym_db.RegisterMessage(ManilaResponse)
 
 
 
 _EOS = _descriptor.ServiceDescriptor(
-  name='EOS',
-  full_name='EOS',
+  name='Eos',
+  full_name='Eos',
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=299,
-  serialized_end=344,
+  serialized_start=311,
+  serialized_end=368,
   methods=[
   _descriptor.MethodDescriptor(
     name='ServerRequest',
-    full_name='EOS.ServerRequest',
+    full_name='Eos.ServerRequest',
     index=0,
     containing_service=None,
-    input_type=_REQUEST,
-    output_type=_RESPONSE,
+    input_type=_MANILAREQUEST,
+    output_type=_MANILARESPONSE,
     serialized_options=None,
   ),
 ])
 _sym_db.RegisterServiceDescriptor(_EOS)
 
-DESCRIPTOR.services_by_name['EOS'] = _EOS
+DESCRIPTOR.services_by_name['Eos'] = _EOS
 
 # @@protoc_insertion_point(module_scope)

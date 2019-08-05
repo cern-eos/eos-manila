@@ -62,7 +62,7 @@ class EOSDriver(driver.ExecuteMixin, driver.ShareDriver):
             protocol = share["share_proto"]
             request_proto = eos_pb2.Request(request_type=request_type, auth_key=auth_key, protocol=protocol, share_name=share["display_name"], description=share["display_description"], share_id=share["id"], share_group_id=share["share_group_id"], quota=share["size"], creator=share["user_id"], egroup=share["project_id"], admin_egroup="", share_location=share["export_location"])
         
-        response = self.grpc_client.ServerRequest(request_proto)
+        response = self.grpc_client.ManilaServerRequest(request_proto)
         return response
 
     def report(self, response):
