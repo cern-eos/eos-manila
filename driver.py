@@ -25,6 +25,7 @@ import grpc_eos.eos_pb2_grpc as eos_pb2_grpc
 
 from manila.share import driver
 from manila import exception
+from manila.share import api
 
 LOG = log.getLogger(__name__)
 
@@ -45,14 +46,15 @@ class EosDriver(driver.ExecuteMixin, driver.ShareDriver):
 
     def __init__(self, *args, **kwargs):
         super(EosDriver, self).__init__(False, *args, **kwargs)
- 
+
+        self.api = api.API() 
         self.backend_name = self.configuration.safe_get('share_backend_name') or 'EOS'
         self.configuration.append_config_values(eos_opts)
 
         channel = grpc.insecure_channel('localhost:50051')
         self.grpc_client = eos_pb2_grpc.EosStub(channel) 
 
-    def request(self, request_type, share=None, context=None):         
+    def request(self, request_type, share=None, context=None, metadata={"share_host": None}):         
         auth_key = self.configuration.eos_authentication_key
 
         if not share:
@@ -60,7 +62,7 @@ class EosDriver(driver.ExecuteMixin, driver.ShareDriver):
             request_proto = eos_pb2.ManilaRequest(request_type=request_type, auth_key=auth_key, protocol=protocol)
         else:
             protocol = share["share_proto"]
-            request_proto = eos_pb2.ManilaRequest(request_type=request_type, auth_key=auth_key, protocol=protocol, share_name=share["display_name"], description=share["display_description"], share_id=share["id"], share_group_id=share["share_group_id"], quota=share["size"], creator=share["user_id"], egroup=share["project_id"], admin_egroup="", share_location=share["export_location"])
+            request_proto = eos_pb2.ManilaRequest(request_type=request_type, auth_key=auth_key, protocol=protocol, share_name=share["display_name"], description=share["display_description"], share_id=share["id"], share_group_id=share["share_group_id"], quota=share["size"], creator=share["user_id"], egroup=share["project_id"], admin_egroup="", share_location=metadata["share_host"])
         
         response = self.grpc_client.ManilaServerRequest(request_proto)
         return response
@@ -70,7 +72,17 @@ class EosDriver(driver.ExecuteMixin, driver.ShareDriver):
             raise exception.EOSException(msg=response.msg)
 
     def create_share(self, context, share, share_server=None):
-        response = self.request(request_type="CREATE_SHARE", share=share, context=context)
+        metadata = self.api.get_share_metadata(context, {'id': share['share_id']})
+
+        #make sure there is a value for the share host before proceeding
+        try:
+           share_host = metadata["share_host"]
+           response = self.request(request_type="CREATE_SHARE", share=share, context=context, metadata=metadata)
+        except KeyError:
+           response = eos_pb2.ManilaResponse()
+           response.code = -1
+           response.msg = "Invalid share host"
+         
         self.report(response)
 
         #should return the location of where the share is located on the server
@@ -106,30 +118,6 @@ class EosDriver(driver.ExecuteMixin, driver.ShareDriver):
         share["size"] = new_size
         response = self.request(request_type="SHRINK_SHARE", share=share)
         self.report(response)
-
-    def ensure_share(self, context, share, share_server=None):
-        pass
-
-    def allow_access(self, context, share, access, share_server=None):
-        pass
-
-    def deny_access(self, context, share, access, share_server=None):
-        pass
-
-    def do_setup(self, context):
-        pass
-
-    def setup_server(self, *args, **kwargs):
-        pass
-
-    def teardown_server(self, *args, **kwargs):
-        pass
-
-    def create_share_group(self, context, group_id, share_server=None):
-        pass
-
-    def delete_share_group(self, context, group_id, share_server=None):
-        pass
     
     def get_capacities(self):
         response=""

@@ -10,9 +10,12 @@ def report(action, response):
    print("Share " + action  + ": " +  response.msg + ". Code: " + str(response.code) + "\n")
 
 def create_share(request):
-   #access CERN share export location in request.share_location
+   #access CERN share export location by using "request.share_location"
+
+   #this is the location that the share will be created
    path = BEGIN_PATH + request.creator + "/" + request.share_name
-   
+  
+   #check to see if the path already exists 
    if os.path.isdir(path):
       path = "1"
    else:
@@ -35,9 +38,6 @@ def delete_share(request):
    
 def change_share_size(request):
    path = BEGIN_PATH + request.creator + "/" + request.share_name + "/size.txt"
-   #file = open(BEGIN_PATH + request.creator + "/" + request.share_name + "/size.txt", 'w')
-   #file.write(str(request.quota))
-   #file.close()
  
    configParser.read(path)
    configParser.set("MANILA-SHARE-CONFIG", "size", str(request.quota))
@@ -90,7 +90,7 @@ def manage_existing(request):
 def unmanage(request):
    ini_path = request.share_location + "/share.ini"
    configParser.read(ini_path)
-   configParser.set("MANILA-SHARE-CONFIG", "managed", "False")
+   configParser.set("MANILA-SHARE-CONFIG", "managed", "False") #ini no longer recognizes this share
    
    f = open(ini_path, 'w')
    configParser.write(f)
@@ -105,6 +105,7 @@ def get_used_capacity():
    path = BEGIN_PATH
    used = 0
 
+   #simply getting the sum of all the shares to report back to manila
    for root, directories, files in os.walk(path):
        for file in files:
            if file.endswith("share.ini"):
