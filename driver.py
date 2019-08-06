@@ -33,7 +33,7 @@ eos_opts = [
                required=True,
                help="Authentication key to access EOS GRPC server."),
     cfg.StrOpt('eos_username',
-               required=True,
+               required=False,
                secret=True,
                help="EOS username"),
 ]
@@ -41,26 +41,26 @@ eos_opts = [
 CONF = cfg.CONF
 CONF.register_opts(eos_opts)   
 
-class EOSDriver(driver.ExecuteMixin, driver.ShareDriver):
+class EosDriver(driver.ExecuteMixin, driver.ShareDriver):
 
     def __init__(self, *args, **kwargs):
-        super(EOSDriver, self).__init__(False, *args, **kwargs)
+        super(EosDriver, self).__init__(False, *args, **kwargs)
  
         self.backend_name = self.configuration.safe_get('share_backend_name') or 'EOS'
         self.configuration.append_config_values(eos_opts)
 
         channel = grpc.insecure_channel('localhost:50051')
-        self.grpc_client = eos_pb2_grpc.EOSStub(channel) 
+        self.grpc_client = eos_pb2_grpc.EosStub(channel) 
 
     def request(self, request_type, share=None, context=None):         
         auth_key = self.configuration.eos_authentication_key
 
         if not share:
             protocol = "EOS"
-            request_proto = eos_pb2.Request(request_type=request_type, auth_key=auth_key, protocol=protocol)
+            request_proto = eos_pb2.ManilaRequest(request_type=request_type, auth_key=auth_key, protocol=protocol)
         else:
             protocol = share["share_proto"]
-            request_proto = eos_pb2.Request(request_type=request_type, auth_key=auth_key, protocol=protocol, share_name=share["display_name"], description=share["display_description"], share_id=share["id"], share_group_id=share["share_group_id"], quota=share["size"], creator=share["user_id"], egroup=share["project_id"], admin_egroup="", share_location=share["export_location"])
+            request_proto = eos_pb2.ManilaRequest(request_type=request_type, auth_key=auth_key, protocol=protocol, share_name=share["display_name"], description=share["display_description"], share_id=share["id"], share_group_id=share["share_group_id"], quota=share["size"], creator=share["user_id"], egroup=share["project_id"], admin_egroup="", share_location=share["export_location"])
         
         response = self.grpc_client.ManilaServerRequest(request_proto)
         return response
@@ -70,7 +70,7 @@ class EOSDriver(driver.ExecuteMixin, driver.ShareDriver):
             raise exception.EOSException(msg=response.msg)
 
     def create_share(self, context, share, share_server=None):
-        response = self.request(request_type="create_share", share=share, context=context)
+        response = self.request(request_type="CREATE_SHARE", share=share, context=context)
         self.report(response)
 
         #should return the location of where the share is located on the server
@@ -83,28 +83,28 @@ class EOSDriver(driver.ExecuteMixin, driver.ShareDriver):
         if quota:
             share["size"] = quota
 
-        response = self.request(request_type="manage_existing", share=share)
+        response = self.request(request_type="MANAGE_EXISTING", share=share)
         self.report(response)
  
         return {"size": int(response.msg), "export_locations": [{"path": share["export_location"]}]}
 
     def unmanage(self, share, share_server=None):
-        response = self.request(request_type="unmanage", share=share)
+        response = self.request(request_type="UNMANAGE", share=share)
         self.report(response)
 
     def delete_share(self, context, share, share_server=None):
         user = context.to_dict()["user_id"]
-        response = self.request(request_type="delete_share", share=share, context=context)
+        response = self.request(request_type="DELETE_SHARE", share=share, context=context)
         self.report(response)
 
     def extend_share(self, share, new_size, share_server=None):
         share["size"] = new_size
-        response = self.request(request_type="extend_share", share=share)
+        response = self.request(request_type="EXTEND_SHARE", share=share)
         self.report(response)
 
     def shrink_share(self, share, new_size, share_server=None):
         share["size"] = new_size
-        response = self.request(request_type="shrink_share", share=share)
+        response = self.request(request_type="SHRINK_SHARE", share=share)
         self.report(response)
 
     def ensure_share(self, context, share, share_server=None):
@@ -135,10 +135,10 @@ class EOSDriver(driver.ExecuteMixin, driver.ShareDriver):
         response=""
 
         try:
-            response = self.request(request_type="get_used_capacity")
+            response = self.request(request_type="GET_USED_CAPACITY")
             used = int(response.msg)
 
-            response = self.request(request_type="get_total_capacity")
+            response = self.request(request_type="GET_TOTAL_CAPACITY")
             total = int(response.msg)
 
             free = total-used
@@ -159,4 +159,4 @@ class EOSDriver(driver.ExecuteMixin, driver.ShareDriver):
             free_capacity_gb= free,
             reserved_percentage=5)
 
-        super(EOSDriver, self)._update_share_stats(data)
+        super(EosDriver, self)._update_share_stats(data)

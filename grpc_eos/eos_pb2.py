@@ -4,6 +4,7 @@
 
 import sys
 _b=sys.version_info[0]<3 and (lambda x:x) or (lambda x:x.encode('latin1'))
+from google.protobuf.internal import enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
 from google.protobuf import reflection as _reflection
@@ -20,9 +21,64 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\teos.proto\"\xfa\x01\n\rManilaRequest\x12\x14\n\x0crequest_type\x18\x01 \x01(\t\x12\x10\n\x08\x61uth_key\x18\x02 \x01(\t\x12\x10\n\x08protocol\x18\x03 \x01(\t\x12\x12\n\nshare_name\x18\x04 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\x12\x10\n\x08share_id\x18\x06 \x01(\t\x12\x16\n\x0eshare_group_id\x18\x07 \x01(\t\x12\r\n\x05quota\x18\x08 \x01(\x05\x12\x0f\n\x07\x63reator\x18\t \x01(\t\x12\x0e\n\x06\x65group\x18\n \x01(\t\x12\x14\n\x0c\x61\x64min_egroup\x18\x0b \x01(\t\x12\x16\n\x0eshare_location\x18\x0c \x01(\t\"+\n\x0eManilaResponse\x12\x0b\n\x03msg\x18\x01 \x01(\t\x12\x0c\n\x04\x63ode\x18\x02 \x01(\x05\x32\x39\n\x03\x45os\x12\x32\n\rServerRequest\x12\x0e.ManilaRequest\x1a\x0f.ManilaResponse\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\teos.proto\"\x90\x02\n\rManilaRequest\x12*\n\x0crequest_type\x18\x01 \x01(\x0e\x32\x14.MANILA_REQUEST_TYPE\x12\x10\n\x08\x61uth_key\x18\x02 \x01(\t\x12\x10\n\x08protocol\x18\x03 \x01(\t\x12\x12\n\nshare_name\x18\x04 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\x12\x10\n\x08share_id\x18\x06 \x01(\t\x12\x16\n\x0eshare_group_id\x18\x07 \x01(\t\x12\r\n\x05quota\x18\x08 \x01(\x05\x12\x0f\n\x07\x63reator\x18\t \x01(\t\x12\x0e\n\x06\x65group\x18\n \x01(\t\x12\x14\n\x0c\x61\x64min_egroup\x18\x0b \x01(\t\x12\x16\n\x0eshare_location\x18\x0c \x01(\t\"+\n\x0eManilaResponse\x12\x0b\n\x03msg\x18\x01 \x01(\t\x12\x0c\n\x04\x63ode\x18\x02 \x01(\x05*\xaf\x01\n\x13MANILA_REQUEST_TYPE\x12\x10\n\x0c\x43REATE_SHARE\x10\x00\x12\x10\n\x0c\x44\x45LETE_SHARE\x10\x01\x12\x10\n\x0c\x45XTEND_SHARE\x10\x02\x12\x10\n\x0cSHRINK_SHARE\x10\x03\x12\x13\n\x0fMANAGE_EXISTING\x10\x04\x12\x0c\n\x08UNMANAGE\x10\x05\x12\x15\n\x11GET_USED_CAPACITY\x10\x06\x12\x16\n\x12GET_TOTAL_CAPACITY\x10\x07\x32?\n\x03\x45os\x12\x38\n\x13ManilaServerRequest\x12\x0e.ManilaRequest\x1a\x0f.ManilaResponse\"\x00\x62\x06proto3')
 )
 
+_MANILA_REQUEST_TYPE = _descriptor.EnumDescriptor(
+  name='MANILA_REQUEST_TYPE',
+  full_name='MANILA_REQUEST_TYPE',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='CREATE_SHARE', index=0, number=0,
+      serialized_options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='DELETE_SHARE', index=1, number=1,
+      serialized_options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='EXTEND_SHARE', index=2, number=2,
+      serialized_options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='SHRINK_SHARE', index=3, number=3,
+      serialized_options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='MANAGE_EXISTING', index=4, number=4,
+      serialized_options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='UNMANAGE', index=5, number=5,
+      serialized_options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='GET_USED_CAPACITY', index=6, number=6,
+      serialized_options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='GET_TOTAL_CAPACITY', index=7, number=7,
+      serialized_options=None,
+      type=None),
+  ],
+  containing_type=None,
+  serialized_options=None,
+  serialized_start=334,
+  serialized_end=509,
+)
+_sym_db.RegisterEnumDescriptor(_MANILA_REQUEST_TYPE)
+
+MANILA_REQUEST_TYPE = enum_type_wrapper.EnumTypeWrapper(_MANILA_REQUEST_TYPE)
+CREATE_SHARE = 0
+DELETE_SHARE = 1
+EXTEND_SHARE = 2
+SHRINK_SHARE = 3
+MANAGE_EXISTING = 4
+UNMANAGE = 5
+GET_USED_CAPACITY = 6
+GET_TOTAL_CAPACITY = 7
 
 
 
@@ -35,8 +91,8 @@ _MANILAREQUEST = _descriptor.Descriptor(
   fields=[
     _descriptor.FieldDescriptor(
       name='request_type', full_name='ManilaRequest.request_type', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
+      number=1, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -130,7 +186,7 @@ _MANILAREQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=14,
-  serialized_end=264,
+  serialized_end=286,
 )
 
 
@@ -167,12 +223,14 @@ _MANILARESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=266,
-  serialized_end=309,
+  serialized_start=288,
+  serialized_end=331,
 )
 
+_MANILAREQUEST.fields_by_name['request_type'].enum_type = _MANILA_REQUEST_TYPE
 DESCRIPTOR.message_types_by_name['ManilaRequest'] = _MANILAREQUEST
 DESCRIPTOR.message_types_by_name['ManilaResponse'] = _MANILARESPONSE
+DESCRIPTOR.enum_types_by_name['MANILA_REQUEST_TYPE'] = _MANILA_REQUEST_TYPE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 ManilaRequest = _reflection.GeneratedProtocolMessageType('ManilaRequest', (_message.Message,), {
@@ -197,12 +255,12 @@ _EOS = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=311,
-  serialized_end=368,
+  serialized_start=511,
+  serialized_end=574,
   methods=[
   _descriptor.MethodDescriptor(
-    name='ServerRequest',
-    full_name='Eos.ServerRequest',
+    name='ManilaServerRequest',
+    full_name='Eos.ManilaServerRequest',
     index=0,
     containing_service=None,
     input_type=_MANILAREQUEST,

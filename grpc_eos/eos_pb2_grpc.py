@@ -14,8 +14,8 @@ class EosStub(object):
     Args:
       channel: A grpc.Channel.
     """
-    self.ServerRequest = channel.unary_unary(
-        '/Eos/ServerRequest',
+    self.ManilaServerRequest = channel.unary_unary(
+        '/Eos/ManilaServerRequest',
         request_serializer=eos__pb2.ManilaRequest.SerializeToString,
         response_deserializer=eos__pb2.ManilaResponse.FromString,
         )
@@ -25,7 +25,7 @@ class EosServicer(object):
   # missing associated documentation comment in .proto file
   pass
 
-  def ServerRequest(self, request, context):
+  def ManilaServerRequest(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -35,8 +35,8 @@ class EosServicer(object):
 
 def add_EosServicer_to_server(servicer, server):
   rpc_method_handlers = {
-      'ServerRequest': grpc.unary_unary_rpc_method_handler(
-          servicer.ServerRequest,
+      'ManilaServerRequest': grpc.unary_unary_rpc_method_handler(
+          servicer.ManilaServerRequest,
           request_deserializer=eos__pb2.ManilaRequest.FromString,
           response_serializer=eos__pb2.ManilaResponse.SerializeToString,
       ),

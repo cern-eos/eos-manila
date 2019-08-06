@@ -1,7 +1,19 @@
 syntax = "proto3";
 
+enum MANILA_REQUEST_TYPE {
+   CREATE_SHARE = 0;
+   DELETE_SHARE = 1;
+   EXTEND_SHARE = 2;
+   SHRINK_SHARE = 3;
+   MANAGE_EXISTING = 4;
+   UNMANAGE = 5;
+   GET_USED_CAPACITY = 6;
+   GET_TOTAL_CAPACITY = 7;
+}
+
+
 message ManilaRequest {
-   string request_type = 1;
+   MANILA_REQUEST_TYPE request_type = 1;
    string auth_key = 2;
    string protocol = 3;
    string share_name = 4;

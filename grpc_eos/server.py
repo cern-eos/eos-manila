@@ -13,7 +13,7 @@ EOS_PROTOCOL = "EOS"
 AUTH_KEY = "BakTIcB08XwQ7vNvagi8"
 
 # create a class to define the server functions
-class EOSServicer(eos_pb2_grpc.EOSServicer):
+class EosServicer(eos_pb2_grpc.EosServicer):
    
     ''' HELPER FUNCTIONS '''
 
@@ -88,14 +88,14 @@ class EOSServicer(eos_pb2_grpc.EOSServicer):
     ''' FUNCTION ROUTING '''
 
     switcher = {
-        "create_share": CreateShare,
-        "delete_share": DeleteShare,
-        "extend_share": ExtendShare,
-        "shrink_share": ShrinkShare,
-        "manage_existing": ManageExisting,
-        "unmanage": Unmanage,
-        "get_used_capacity": GetUsedCapacity,
-        "get_total_capacity": GetTotalCapacity
+        0: CreateShare,
+        1: DeleteShare,
+        2: ExtendShare,
+        3: ShrinkShare,
+        4: ManageExisting,
+        5: Unmanage,
+        6: GetUsedCapacity,
+        7: GetTotalCapacity
     }
 
     def ManilaServerRequest(self, request, context):
@@ -103,9 +103,13 @@ class EOSServicer(eos_pb2_grpc.EOSServicer):
 
         #check the auth key & check the protocol type
         if request.protocol == EOS_PROTOCOL and self.validate_auth(key=request.auth_key):
-            #route the request to the correct method/function
+
+            '''
+            "self.switcher.get" uses the request_type/enum to check the
+            corresponding method with the switcher object above (Python does not have switch statements)
+            '''
             func = self.switcher.get(request.request_type, lambda: "Function does not exist.")
-            return func(self, request=request, context=context)
+            return func(self, request=request, context=context) #runs the function
         else:
            #invalid request -- reject
            return self.generate_response(message="Bad Request: Permission Denied", code=-1)
@@ -115,8 +119,8 @@ server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 
 # use the generated function `add_EOSServicer_to_server`
 # to add the defined class to the server
-eos_pb2_grpc.add_EOSServicer_to_server(
-        EOSServicer(), server)
+eos_pb2_grpc.add_EosServicer_to_server(
+        EosServicer(), server)
 
 # listen on port 50051
 print('Starting server. Listening on port 50051.')
