@@ -20,10 +20,21 @@ class EosServicer(eos_pb2_grpc.EosServicer):
     def validate_auth(self, key=None):
         return AUTH_KEY == "BakTIcB08XwQ7vNvagi8"
 
-    def generate_response(self, message=None, code=None):
+    def generate_response(self, message=None, code=None, total_used=None, total_capacity=None, new_share_quota=None, new_share_path=None):
         response = eos_pb2.ManilaResponse()
         response.msg = message
         response.code = code
+        
+        if total_capacity is not None:
+            response.total_used = total_used
+            response.total_capacity = total_capacity
+        
+        if new_share_quota is not None:
+            response.new_share_quota = new_share_quota
+        
+        if new_share_path is not None:
+            response.new_share_path = new_share_path
+        
         return response
    
     ''' ----------------- '''
@@ -34,7 +45,7 @@ class EosServicer(eos_pb2_grpc.EosServicer):
         if not os.path.isdir(share_location):
            response = self.generate_response(message="Could not create share", code=-1)
         else:
-           response = self.generate_response(message=share_location, code=1)
+           response = self.generate_response(message="Share successfully created", code=1, new_share_path=share_location)
         
         eos.report(action='added', response=response)
         return response
@@ -51,20 +62,32 @@ class EosServicer(eos_pb2_grpc.EosServicer):
         return response
 
     def ExtendShare(self, request, context):
-        eos.change_share_size(request)
-        return self.generate_response(message="Share extension successful", code=1)
+        try:
+            eos.change_share_size(request)
+            response = self.generate_response(message="Share extension successful", code=1)
+        except ValueError:
+            self.generate_response(message="Share extension unsuccessful", code=-1)
+
+        eos.report(action='extended', response=response)
+        return response
 
     def ShrinkShare(self, request, context):
-        eos.change_share_size(request)
-        return self.generate_response(message="Share shrinkage successful", code=1)
+        try:
+            eos.change_share_size(request)
+            response = self.generate_response(message="Share shrinkage successful", code=1)
+        except:
+             response =  self.generate_response(message="Share shrinkage unsuccessful", code=-1)
+
+        eos.report(action="shrunk", response=response)
+        return response
 
     def ManageExisting(self, request, context):
-        size = eos.manage_existing(request)
+        quota = eos.manage_existing(request)
         
         if int(size) < 0:
            response = self.generate_response(message="Could not manage share", code=-1)
         else:
-           response = self.generate_response(message=size, code=1)
+           response = self.generate_response(message="Successfully managed share", code=1, new_share_size=quota)
 
         eos.report(action='managed', response=response)
         return response
@@ -79,11 +102,14 @@ class EosServicer(eos_pb2_grpc.EosServicer):
         eos.report(action="unmanaged", response=response)
         return response
 
-    def GetUsedCapacity(self, request, context):
-        return self.generate_response(message=eos.get_used_capacity(), code=1)
+    def GetCapacities(self, request, context):
+        try:
+            response = self.generate_response(message="Capacities retrieved", code=1, total_used=eos.get_used_capacity(), total_capacity=eos.get_total_capacity())
+        except:
+            response =  self.generate_response(message="Unable to retrieve capacities", code=-1)
 
-    def GetTotalCapacity(self, request, context):
-        return self.generate_response(message="50", code=1) #arbitrary total capacity
+        eos.report(action="retrived capacities", response=response)
+        return response
 
     ''' FUNCTION ROUTING '''
 
@@ -94,8 +120,7 @@ class EosServicer(eos_pb2_grpc.EosServicer):
         3: ShrinkShare,
         4: ManageExisting,
         5: Unmanage,
-        6: GetUsedCapacity,
-        7: GetTotalCapacity
+        6: GetCapacities
     }
 
     def ManilaServerRequest(self, request, context):

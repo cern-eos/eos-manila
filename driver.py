@@ -1,4 +1,4 @@
-#    Copyright 2012 OpenStack Foundation
+#    Copyright 2011 OpenStack Foundation
 #    Copyright 2014 Mirantis Inc.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -33,7 +33,7 @@ eos_opts = [
                required=True,
                help="Authentication key to access EOS GRPC server."),
     cfg.StrOpt('eos_username',
-               required=False,
+               required=True,
                secret=True,
                help="EOS username"),
 ]
@@ -74,7 +74,7 @@ class EosDriver(driver.ExecuteMixin, driver.ShareDriver):
         self.report(response)
 
         #should return the location of where the share is located on the server
-        return response.msg
+        return response.new_share_path
 
     def manage_existing(self, share, driver_options):
         # Calculate quota for managed dataset
@@ -86,7 +86,7 @@ class EosDriver(driver.ExecuteMixin, driver.ShareDriver):
         response = self.request(request_type="MANAGE_EXISTING", share=share)
         self.report(response)
  
-        return {"size": int(response.msg), "export_locations": [{"path": share["export_location"]}]}
+        return {"size": response.new_share_quota, "export_locations": [{"path": share["export_location"]}]}
 
     def unmanage(self, share, share_server=None):
         response = self.request(request_type="UNMANAGE", share=share)
@@ -135,11 +135,9 @@ class EosDriver(driver.ExecuteMixin, driver.ShareDriver):
         response=""
 
         try:
-            response = self.request(request_type="GET_USED_CAPACITY")
-            used = int(response.msg)
-
-            response = self.request(request_type="GET_TOTAL_CAPACITY")
-            total = int(response.msg)
+            response = self.request(request_type="GET_CAPACITIES")
+            used = response.total_used 
+            total = response.total_capacity
 
             free = total-used
         except ValueError:

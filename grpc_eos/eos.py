@@ -6,9 +6,6 @@ import ConfigParser
 BEGIN_PATH = os.path.expanduser('~') + "/eos_shares/"
 configParser = ConfigParser.RawConfigParser()
 
-#need admin privileges for manila
-os.system("source ~/devstack/accrc/admin/admin")
-
 def report(action, response):
    print("Share " + action  + ": " +  response.msg + ". Code: " + str(response.code) + "\n")
 
@@ -54,9 +51,9 @@ def change_share_size(request):
 def manage_existing(request):
    if not os.path.isdir(request.share_location):
       #can't manage a share path that does not exist
-      return "-1"
+      return -1
    
-   size = "0"
+   size = 0
    ini_path = request.share_location + "/share.ini"
 
    #check the size.txt in the folder for the TOTAL size of the share, NOT used
@@ -83,7 +80,7 @@ def manage_existing(request):
        folder_name = request.share_location[request.share_location.rindex("/"):]
        os.system("manila update " + request.share_id + " --name " + folder_name)
    except ValueError:
-       size = "-1"
+       size = -1
 
    return size
 
@@ -117,4 +114,7 @@ def get_used_capacity():
            else:
                continue
    
-   return str(used)
+   return used
+
+def get_total_capacity():
+   return 50
