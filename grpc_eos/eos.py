@@ -9,7 +9,8 @@ configParser = ConfigParser.RawConfigParser()
 def report(action, response):
    print("Share " + action  + ": " +  response.msg + ". Code: " + str(response.code) + "\n")
 
-def create_share(request):   
+def create_share(request):
+   #access CERN share export location in request.share_location
    path = BEGIN_PATH + request.creator + "/" + request.share_name
    
    if os.path.isdir(path):
@@ -58,17 +59,19 @@ def manage_existing(request):
 
    #check the size.txt in the folder for the TOTAL size of the share, NOT used
    try:
-       if not os.path.isfile(ini_path):
+       if not os.path.isfile(ini_path): #check to see if the new share already has an .ini file -- if not, create one
           file = open(ini_path, "w+")
           file.write("[MANILA-SHARE-CONFIG]\n")
           file.close()
-       else:
+       else: #save the size of the share if the .ini file already exists
           configParser.read(ini_path)
           size = configParser.get("MANILA-SHARE-CONFIG", "size")
        
+       #if the user has specified the size of the share in the request, use that instead
        if request.quota:
           size = request.quota
 
+       #update the .ini file
        configParser.set("MANILA-SHARE-CONFIG", "size", size)
        configParser.set("MANILA-SHARE-CONFIG", "managed", "True")
        
@@ -76,7 +79,7 @@ def manage_existing(request):
        configParser.write(f)
        f.close()
 
-       #update share name
+       #update share name -- nonfunctional :(
        folder_name = request.share_location[request.share_location.rindex("/"):]
        os.system("manila update " + request.share_id + " --name " + folder_name)
    except ValueError:

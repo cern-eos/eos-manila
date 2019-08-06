@@ -19,7 +19,7 @@ message ManilaRequest {
    string description = 5;
    string share_id = 6;
    string share_group_id = 7;
-   int31 quota = 8;
+   int64 quota = 8;
    string creator = 9;
    string egroup = 10;
    string admin_egroup = 11;
