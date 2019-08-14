@@ -1,4 +1,5 @@
 syntax = "proto3";
+//package eos.rpc;
 
 enum MANILA_REQUEST_TYPE {
    CREATE_SHARE = 0;
@@ -23,7 +24,8 @@ message ManilaRequest {
    string creator = 9;
    string egroup = 10;
    string admin_egroup = 11;
-   string share_location = 12;
+   string share_host = 12;
+   string share_location = 13;
 }
 
 message ManilaResponse {

@@ -27,32 +27,47 @@ from manila.share import driver
 from manila import exception
 from manila.share import api
 
+import openstack
+
 LOG = log.getLogger(__name__)
 
+#eos_group = cfg.OptGroup(name='eos', title='Eos Options')
 eos_opts = [
     cfg.StrOpt('eos_authentication_key',
-               required=True,
-               help="Authentication key to access EOS GRPC server."),
-    cfg.StrOpt('eos_username',
-               required=True,
-               secret=True,
-               help="EOS username"),
+               required=False,
+               help="Authentication key to access EOS GRPC server.")
 ]
 
 CONF = cfg.CONF
+#CONF.register_group(eos_group)
 CONF.register_opts(eos_opts)   
-
+'''
+conn = openstack.connect(auth_url='http://188.185.71.204/identity/v3',
+                         username='admin',
+                         password='nomoresecret',
+                         project_name='admin',
+                         project_domain_id='default',
+                         user_domain_id='default')
+'''
 class EosDriver(driver.ExecuteMixin, driver.ShareDriver):
 
     def __init__(self, *args, **kwargs):
-        super(EosDriver, self).__init__(False, *args, **kwargs)
-
+        super(EosDriver, self).__init__(False, *args, config_opts=[eos_opts] ,**kwargs)
         self.api = api.API() 
+
         self.backend_name = self.configuration.safe_get('share_backend_name') or 'EOS'
         self.configuration.append_config_values(eos_opts)
 
+        #channel = grpc.insecure_channel('ajp.cern.ch:50051')
         channel = grpc.insecure_channel('localhost:50051')
         self.grpc_client = eos_pb2_grpc.EosStub(channel) 
+
+        self.conn = openstack.connect(auth_url='http://188.185.71.204/identity/v3',
+                         username='admin',
+                         password='nomoresecret',
+                         project_name='admin',
+                         project_domain_id='default',
+                         user_domain_id='default')
 
     def request(self, request_type, share=None, context=None, metadata={"share_host": None}):         
         auth_key = self.configuration.eos_authentication_key
@@ -62,7 +77,24 @@ class EosDriver(driver.ExecuteMixin, driver.ShareDriver):
             request_proto = eos_pb2.ManilaRequest(request_type=request_type, auth_key=auth_key, protocol=protocol)
         else:
             protocol = share["share_proto"]
-            request_proto = eos_pb2.ManilaRequest(request_type=request_type, auth_key=auth_key, protocol=protocol, share_name=share["display_name"], description=share["display_description"], share_id=share["id"], share_group_id=share["share_group_id"], quota=share["size"], creator=share["user_id"], egroup=share["project_id"], admin_egroup="", share_location=metadata["share_host"])
+            share_location = ""
+
+            if share["export_location"]:
+               share_location = share["export_location"]            
+
+            request_proto = eos_pb2.ManilaRequest(request_type=request_type, 
+                                                  auth_key=auth_key, 
+                                                  protocol=protocol, 
+                                                  share_name=share["display_name"], 
+                                                  description=share["display_description"], 
+                                                  share_id=share["id"], 
+                                                  share_group_id=share["share_group_id"], 
+                                                  quota=share["size"], 
+                                                  creator=self.conn.identity.get_user(share['user_id']).name, 
+                                                  egroup=share["project_id"], 
+                                                  admin_egroup="", 
+                                                  share_host=metadata["share_host"],
+                                                  share_location="")
         
         response = self.grpc_client.ManilaServerRequest(request_proto)
         return response

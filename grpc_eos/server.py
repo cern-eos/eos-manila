@@ -127,7 +127,7 @@ class EosServicer(eos_pb2_grpc.EosServicer):
         print(request)
 
         #check the auth key & check the protocol type
-        if request.protocol == EOS_PROTOCOL and self.validate_auth(key=request.auth_key):
+        if request.protocol == EOS_PROTOCOL: #and self.validate_auth(key=request.auth_key):
 
             '''
             "self.switcher.get" uses the request_type/enum to check the
