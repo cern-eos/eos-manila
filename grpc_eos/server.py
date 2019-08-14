@@ -84,10 +84,10 @@ class EosServicer(eos_pb2_grpc.EosServicer):
     def ManageExisting(self, request, context):
         quota = eos.manage_existing(request)
         
-        if int(size) < 0:
+        if int(request.quota) < 0:
            response = self.generate_response(message="Could not manage share", code=-1)
         else:
-           response = self.generate_response(message="Successfully managed share", code=1, new_share_size=quota)
+           response = self.generate_response(message="Successfully managed share", code=1, new_share_quota=quota)
 
         eos.report(action='managed', response=response)
         return response

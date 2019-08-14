@@ -37,7 +37,7 @@ def delete_share(request):
    return old_path 
    
 def change_share_size(request):
-   path = BEGIN_PATH + request.creator + "/" + request.share_name + "/size.txt"
+   path = BEGIN_PATH + request.creator + "/" + request.share_name + "/share.ini"
  
    configParser.read(path)
    configParser.set("MANILA-SHARE-CONFIG", "size", str(request.quota))
