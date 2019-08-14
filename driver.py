@@ -182,3 +182,54 @@ class EosDriver(driver.ExecuteMixin, driver.ShareDriver):
             reserved_percentage=5)
 
         super(EosDriver, self)._update_share_stats(data)
+
+
+
+    /* METHOD HEADERS FOR UNUSED FUNCTIONS */
+
+    /*
+
+    def create_snapshot(self, context, snapshot, share_server=None):
+        pass
+
+    def delete_snapshot(self, context, snapshot, share_server=None):
+        pass
+
+    def create_share_from_snapshot(self, context, share, snapshot,
+                                   share_server=None):
+        return ['/fake/path', '/fake/path2']
+  
+    def ensure_share(self, context, share, share_server=None):
+        pass
+
+    def allow_access(self, context, share, access, share_server=None):
+        pass
+
+    def deny_access(self, context, share, access, share_server=None):
+        pass
+
+    def do_setup(self, context):
+        pass
+
+    def setup_server(self, *args, **kwargs):
+        pass
+
+    def teardown_server(self, *args, **kwargs):
+        pass
+
+    def get_network_allocations_number(self):
+        # NOTE(vponomaryov): Simulate drivers that use share servers and
+        # do not use 'service_instance' module.
+        return 2
+
+    def _verify_share_server_handling(self, driver_handles_share_servers):
+        return super(FakeShareDriver, self)._verify_share_server_handling(
+            driver_handles_share_servers)
+
+    def create_share_group(self, context, group_id, share_server=None):
+        pass
+
+    def delete_share_group(self, context, group_id, share_server=None):
+        pass
+
+    */
