@@ -31,7 +31,6 @@ import openstack
 
 LOG = log.getLogger(__name__)
 
-#eos_group = cfg.OptGroup(name='eos', title='Eos Options')
 eos_opts = [
     cfg.StrOpt('eos_authentication_key',
                required=False,
@@ -39,16 +38,8 @@ eos_opts = [
 ]
 
 CONF = cfg.CONF
-#CONF.register_group(eos_group)
 CONF.register_opts(eos_opts)   
-'''
-conn = openstack.connect(auth_url='http://188.185.71.204/identity/v3',
-                         username='admin',
-                         password='nomoresecret',
-                         project_name='admin',
-                         project_domain_id='default',
-                         user_domain_id='default')
-'''
+
 class EosDriver(driver.ExecuteMixin, driver.ShareDriver):
 
     def __init__(self, *args, **kwargs):
@@ -185,9 +176,9 @@ class EosDriver(driver.ExecuteMixin, driver.ShareDriver):
 
 
 
-    /* METHOD HEADERS FOR UNUSED FUNCTIONS */
+    ### METHOD HEADERS FOR UNUSED FUNCTIONS ###
 
-    /*
+    '''
 
     def create_snapshot(self, context, snapshot, share_server=None):
         pass
@@ -232,4 +223,4 @@ class EosDriver(driver.ExecuteMixin, driver.ShareDriver):
     def delete_share_group(self, context, group_id, share_server=None):
         pass
 
-    */
+    '''
