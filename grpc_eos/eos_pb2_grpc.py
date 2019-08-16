@@ -15,7 +15,7 @@ class EosStub(object):
       channel: A grpc.Channel.
     """
     self.ManilaServerRequest = channel.unary_unary(
-        '/Eos/ManilaServerRequest',
+        '/eos.rpc.Eos/ManilaServerRequest',
         request_serializer=eos__pb2.ManilaRequest.SerializeToString,
         response_deserializer=eos__pb2.ManilaResponse.FromString,
         )
@@ -42,5 +42,5 @@ def add_EosServicer_to_server(servicer, server):
       ),
   }
   generic_handler = grpc.method_handlers_generic_handler(
-      'Eos', rpc_method_handlers)
+      'eos.rpc.Eos', rpc_method_handlers)
   server.add_generic_rpc_handlers((generic_handler,))

@@ -1,5 +1,5 @@
 syntax = "proto3";
-//package eos.rpc;
+package eos.rpc;
 
 enum MANILA_REQUEST_TYPE {
    CREATE_SHARE = 0;
